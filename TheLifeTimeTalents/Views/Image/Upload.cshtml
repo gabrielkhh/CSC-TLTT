@@ -1,0 +1,75 @@
+﻿
+@{
+    ViewData["Title"] = "Image Upload";
+}
+
+<div class="container body-content">
+    <h2>@ViewData["Title"].</h2>
+
+
+    <h4>Upload a new image.</h4>
+    <hr />
+
+
+    <div class="form-group">
+        <label class="col-md-2 control-label">Title</label>
+        <div class="col-md-10">
+            <input class="form-control" />
+        </div>
+    </div>
+
+    <br /><br /><br />
+
+    <div class="form-group">
+        <label class="col-md-2 control-label">Description</label>
+        <div class="col-md-10">
+            <textarea class="form-control"></textarea>
+        </div>
+    </div>
+
+    <br /><br /><br />
+
+    <div class="form-group">
+        <label class="col-md-2 control-label">Image</label>
+        <div class="col-md-10">
+            <input id="fileInput" name="fileInput" type="file" class="file input-group-lg" multiple />
+        </div>
+    </div>   
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10 padding-top">
+            <button type="submit" class="btn btn-default">Upload</button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    window.$PhotoInputElement = $('#fileInput');
+
+    window.$PhotoInputElement.fileinput({
+        uploadUrl: '/API/Image/UploadImage',
+        uploadAsync: false,
+        maxFileCount: 3,
+        type: 'post',
+        overwriteInitial: false,
+        showUpload: false,
+        showRemove: false,
+        browseClass: 'btn btn-primary btn-md pull-right',
+        previewFileIcon: '<i class="glyphicon glyphicon-king"></i>',
+        allowedFileExtensions: ['jpg', 'jpeg', 'png'],
+        uploadExtraData: function () {
+            var out = {};
+            return out;
+        }
+    });
+    window.$PhotoInputElement.on('filebatchuploadcomplete', function (event, data, previewId, index) {
+        var form = data.form, files = data.files, extra = data.extra,
+            response = data.response, reader = data.reader;
+        console.log(response);
+        console.log(event);
+        console.dir(data);
+        swal("Uploaded!", "Image Uploaded", "success")
+        $('body').fadeOut(2000, redirectPage);
+    });
+</script>

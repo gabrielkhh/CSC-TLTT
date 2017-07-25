@@ -8,6 +8,47 @@
     margin-top: 90px;
 }
 
+.body-content-small {
+    margin-top: 75px;
+}
+
+.search {
+    padding-bottom: 23px;
+}
+
+.search-input {
+    border-bottom-color: #b3b3b3;
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    border-left-color: #b3b3b3;
+    border-left-style: solid;
+    border-left-width: 1px;
+    border-right-color: #b3b3b3;
+    border-right-style: solid;
+    border-right-width: 1px;
+    border-top-color: #b3b3b3;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    border-top-style: solid;
+    border-top-width: 1px;
+}
+
+.toCenter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.padding-top {
+    padding-top: 20px;
+}
+
+.padding-right{
+    padding-right: 20px;
+}
+
 html,
 body {
     height: 100%;

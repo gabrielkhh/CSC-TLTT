@@ -9,6 +9,9 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <title>The Life Time Talents</title>
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <link href="~/lib/bootstrap-fileinput-master/css/fileinput.css" rel="stylesheet" />
+    <script src="~/lib/bootstrap-fileinput-master/js/fileinput.js"></script>
     <!-- Bootstrap Core CSS -->
     <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
     <!-- Custom Fonts -->
@@ -42,15 +45,13 @@
             </div>
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                @await Html.PartialAsync("_LoginPartial")
                 <ul class="nav navbar-nav navbar-right">
                     <li>
-                        <a class="page-scroll" href="">Image Upload</a>
-                    </li>
-                    <li>
-                        <a class="page-scroll" href="/Home/Index/#portfolio">Gallery</a>
+                        <a class="page-scroll" href="/Image/Gallery">Gallery</a>
                     </li>
                 </ul>
-                @await Html.PartialAsync("_LoginPartial")
+               
             </div>
             <!-- /.navbar-collapse -->
         </div>

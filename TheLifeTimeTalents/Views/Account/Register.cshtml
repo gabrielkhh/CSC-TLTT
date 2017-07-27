@@ -1,42 +1,68 @@
-﻿@model RegisterViewModel
-@{
+﻿@{
     ViewData["Title"] = "Register";
 }
 <div class="container body-content">
     <h2>@ViewData["Title"].</h2>
 
-    <form asp-controller="Account" asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal smaller-width">
+    <form class="form-horizontal smaller-width">
         <h4>Create a new account.</h4>
         <hr />
-        <div asp-validation-summary="All" class="text-danger"></div>
         <div class="form-group">
-            <label asp-for="Email" class="col-md-2 control-label"></label>
+            <label class="col-md-2 control-label">Email</label>
             <div class="col-md-10">
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
+                <input type="text" id="txtEmail" class="form-control" />
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="Password" class="col-md-2 control-label"></label>
+            <label class="col-md-2 control-label">Password</label>
             <div class="col-md-10">
-                <input asp-for="Password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger"></span>
+                <input type="password" id="txtPassword" class="form-control" />
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="ConfirmPassword" class="col-md-2 control-label"></label>
+            <label class="col-md-2 control-label">Confirm Password</label>
             <div class="col-md-10">
-                <input asp-for="ConfirmPassword" class="form-control" />
-                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                <input type="password" id="txtConfirmPassword" class="form-control" />
             </div>
         </div>
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <button type="submit" class="btn btn-default">Register</button>
+                <button id="btnRegister" type="submit" class="btn btn-default">Register</button>
             </div>
         </div>
+
+        <div id="divError" class="alert alert-danger collapse">
+            <a id="linkClose" href="#" class="close">&times;</a>
+            <div id="divErrorText"></div>
+        </div>
+
     </form>
 </div>
-@section Scripts {
-    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
-}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        //NO FRONT END VALIDATION YET
+
+        // Save the new user details
+        $('#btnRegister').click(function () {
+
+            //Using CORS
+            $.ajax({
+                url: 'https://public-api.wordpress.com/rest/v1/sites/' + site_id + '/posts/new',
+                type: 'POST',
+                data: {
+                    email: $('#txtEmail').val(),
+                    password: $('#txtPassword').val(),
+                    confirmPassword: $('#txtConfirmPassword').val()
+                },
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("Authorization", "BEARER " + access_token);
+                },
+                success: function (response) {
+                    console.log("Success")
+                }
+            });
+        });
+    });
+</script>

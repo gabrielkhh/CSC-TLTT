@@ -34,19 +34,14 @@
                 </div>
             </div>
 
-            <div id="captcha" class="g-recaptcha" data-sitekey="6LeR1SoUAAAAAI3GM6RVCPtcpZCZuIlNwthwbRKl"></div>
-
+            <div class="form-group">
+                <div id="captcha" class="g-recaptcha" data-sitekey="6LeR1SoUAAAAAI3GM6RVCPtcpZCZuIlNwthwbRKl"></div>
+            </div>
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
                     <button id="btnRegister" type="submit" class="btn btn-default">Register</button>
                 </div>
             </div>
-
-            <div id="divError" class="alert alert-danger collapse">
-                <a id="linkClose" href="#" class="close">&times;</a>
-                <div id="divErrorText"></div>
-            </div>
-
         </form>
     </div>
 </div>
@@ -61,7 +56,7 @@
             this.ConfirmPassword = inConfirmPassord;
         }
 
-        var collectedCaptchaResult = grecaptcha.getResponse(captcha);
+        var collectedCaptchaResult = grecaptcha.getResponse($('.captcha'));
 
         console.log(collectedCaptchaResult);
 

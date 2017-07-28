@@ -1,14 +1,14 @@
 ﻿<script src="https://sdk.amazonaws.com/js/aws-sdk-2.0.0-rc1.min.js"></script>
 
 @{
-    ViewData["Title"] = "Image Upload";
+    ViewData["Title"] = "Talent Upload";
 }
 
 <div class="container body-content">
     <h2>@ViewData["Title"].</h2>
 
 
-    <h4>Upload a new image.</h4>
+    <h4>Upload a new talent.</h4>
     <hr />
 
 
@@ -43,14 +43,15 @@
         </div>
     </div>
 
-    <div class="form-group">
+    @*<div class="form-group">
         <div class="col-md-offset-2 col-md-10 padding-top">
             <button onclick="listObjs()" class="btn btn-default"> S3 - List Objects</button>
         </div>
     </div>
 
     <div id="objKeys"></div>
-    <div id="objImgs"></div>
+    <div id="objImgs"></div>*@
+
 </div>
 <script>
     window.$PhotoInputElement = $('#file');

@@ -69,7 +69,7 @@
             collectedTxtConfirmPassword = $('#txtConfirmPassword').val();
             collectedCaptchaResponse = grecaptcha.getResponse();
 
-            conso.log("Response " + collectedCaptchaResponse);
+            console.log("Response " + collectedCaptchaResponse);
 
             var webFormData = new WebFormData(collectedUserName, collectedTxtEmail,
                 collectedTxtPassword, collectedTxtConfirmPassword);

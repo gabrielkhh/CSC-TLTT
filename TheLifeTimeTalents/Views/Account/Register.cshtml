@@ -56,16 +56,15 @@
             this.ConfirmPassword = inConfirmPassord;
         }
 
-        function onloadCallback() {
-            var collectedCaptchaResult = grecaptcha.getResponse($('.captcha'));
-        }
-        
-        console.log(collectedCaptchaResult);
-
         // Save the new user details
         $('#btnRegister').click(function () {
 
             event.preventDefault();
+
+            function onloadCallback() {
+                var collectedCaptchaResult = grecaptcha.getResponse($('.captcha'));
+                console.log(collectedCaptchaResult);
+            }     
 
             ////NO FRONT END VALIDATION YET
             collectedUserName = $('#txtUsername').val();

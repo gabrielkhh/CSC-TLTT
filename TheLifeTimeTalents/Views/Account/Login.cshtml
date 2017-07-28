@@ -5,66 +5,100 @@
 <div class="container body-content">
     <h2>@ViewData["Title"].</h2>
     <div class="row">
-        <div class="col-md-8">
-            <section>
-                <form class="form-horizontal smaller-width">
-                    <h4>Use a local account to log in.</h4>
-                    <hr />
-                    <div class="form-group">
-                        <label class="col-md-2 control-label">Email</label>
-                        <div class="col-md-10">
-                            <input class="form-control" type="text" id="txtEmail"/>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-md-2 control-label">Password</label>
-                        <div class="col-md-10">
-                            <input class="form-control" type="text" id="txtPassword" />
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-md-offset-2 col-md-10">
-                            <button type="submit" class="btn btn-default">Log in</button>
-                        </div>
-                    </div>
-                    <div>
-                        <p>
-                            <a asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]">Register as a new user?</a>
-                        </p>
-                    </div>
-                </form>
-            </section>
-        </div>
-        <div class="col-md-4">
-            <section>
-                <h4>Use another service to log in.</h4>
+        <div class="col-md-6 pull-left">
+            <form class="form-horizontal smaller-width">
+                <h4>Use a local account to log in.</h4>
                 <hr />
-            </section>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">Email</label>
+                    <div class="col-md-10">
+                        <input class="form-control" type="text" id="txtEmail" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">Password</label>
+                    <div class="col-md-10">
+                        <input class="form-control" type="text" id="txtPassword" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <button id="btnLogin" type="submit" class="btn btn-default">Log in</button>
+                    </div>
+                </div>
+                <div>
+                    <p>
+                        <a asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]">Register as a new user?</a>
+                    </p>
+                </div>
+            </form>
         </div>
+        @*<div class="col-md-4">
+                <section>
+                    <h4>Use another service to log in.</h4>
+                    <hr />
+                </section>
+            </div>*@
     </div>
 </div>
 
 <script type="text/javascript">
     $(document).ready(function () {
 
-        //NO FRONT END VALIDATION YET
+
+        function WebFormData(inEmail, inPassword) {
+            this.Email = inemail;
+            this.Password = inPassword;
+        }
 
         // Save the new user details
-        $('#btnRegister').click(function () {
-            //Using CORS
-            $.ajax({
-                url: 'https://public-api.wordpress.com/rest/v1/sites/' + site_id + '/posts/new',
+        $('#btnLogin').click(function () {
+
+            //NO FRONT END VALIDATION YET
+            collectedTxtEmail = $('#txtEmail').val();
+            collectedTxtPassword = $('#txtPassword').val();
+
+            var webFormData = new WebFormData(collectedTxtEmail,
+                collectedTxtPassword);
+
+            var webFormDataInString = JSON.stringify(webFormData);
+
+            console.log(webFormDataInString);
+
+            $loginHandler = jQuery.ajax({
                 type: 'POST',
-                data: {
-                    email: $('#txtEmail').val(),
-                    password: $('#txtPassword').val(),
-                },
-                beforeSend: function (xhr) {
-                    xhr.setRequestHeader("Authorization", "BEARER " + access_token);
-                },
-                success: function (response) {
-                    console.log("Success")
+                url: 'http://talents.anythingabout.me/Account/Login',
+                crossDomain: true,
+                data: webFormDataInString,
+                dataType: 'json',
+                contentType: 'application/json',
+            });
+
+            $loginHandler.done(function (data, textStatus, jqXHR) {
+                console.log("Success");
+                window.location.replace("/Home/Index");
+            });
+
+            $loginHandler.fail(function (data, textStatus, jqXHR) {
+                toastr.options = {
+                    "closeButton": false,
+                    "debug": false,
+                    "newestOnTop": false,
+                    "progressBar": false,
+                    "positionClass": "toast-bottom-left",
+                    "preventDuplicates": false,
+                    "onclick": null,
+                    "showDuration": "300",
+                    "hideDuration": "1000",
+                    "timeOut": "5000",
+                    "extendedTimeOut": "1000",
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
                 }
+
+                toastr["error"](jqXHR, "Error")
             });
         });
     });

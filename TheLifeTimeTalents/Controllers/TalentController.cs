@@ -8,15 +8,15 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace TheLifeTimeTalents.Controllers
 {
-    public class ImageController : Controller
+    public class TalentController : Controller
     {
         // GET: /<controller>/
-        public IActionResult Upload()
+        public IActionResult AddTalent()
         {
             return View();
         }
 
-        public IActionResult Gallery()
+        public IActionResult ViewTalents()
         {
             return View();
         }

@@ -1,0 +1,139 @@
+﻿<script src="https://sdk.amazonaws.com/js/aws-sdk-2.0.0-rc1.min.js"></script>
+
+@{
+    ViewData["Title"] = "Image Upload";
+}
+
+<div class="container body-content">
+    <h2>@ViewData["Title"].</h2>
+
+
+    <h4>Upload a new image.</h4>
+    <hr />
+
+
+    <div class="form-group">
+        <label class="col-md-2 control-label">Title</label>
+        <div class="col-md-10">
+            <input class="form-control" />
+        </div>
+    </div>
+
+    <br /><br /><br />
+
+    <div class="form-group">
+        <label class="col-md-2 control-label">Description</label>
+        <div class="col-md-10">
+            <textarea class="form-control"></textarea>
+        </div>
+    </div>
+
+    <br /><br /><br />
+
+    <div class="form-group">
+        <label class="col-md-2 control-label">Image</label>
+        <div class="col-md-10">
+            <input type="file" name="file" id="file" value="dataFile" required="" input-group-lg" multiple />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10 padding-top">
+            <button id="uploadFile" type="submit" class="btn btn-default" onclick="uploadFile()">Upload</button>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10 padding-top">
+            <button onclick="listObjs()" class="btn btn-default"> S3 - List Objects</button>
+        </div>
+    </div>
+
+    <div id="objKeys"></div>
+    <div id="objImgs"></div>
+</div>
+<script>
+    window.$PhotoInputElement = $('#file');
+
+    window.$PhotoInputElement.fileinput({
+        uploadUrl: '/API/Image/UploadImage',
+        uploadAsync: false,
+        maxFileCount: 3,
+        type: 'post',
+        overwriteInitial: false,
+        showUpload: false,
+        showRemove: false,
+        browseClass: 'btn btn-primary btn-md pull-right',
+        previewFileIcon: '<i class="glyphicon glyphicon-king"></i>',
+        allowedFileExtensions: ['jpg', 'jpeg', 'png'],
+        uploadExtraData: function () {
+            var out = {};
+            return out;
+        }
+    });
+    window.$PhotoInputElement.on('filebatchuploadcomplete', function (event, data, previewId, index) {
+        var form = data.form, files = data.files, extra = data.extra,
+            response = data.response, reader = data.reader;
+        console.log(response);
+        console.log(event);
+        console.dir(data);
+        $('body').fadeOut(2000, '/Home/Index');
+    });
+</script>
+
+@*<script>
+        AWS.config.update({
+            accessKeyId: 'AKIAIVXFDITHKGUQUDIQ',
+            secretAccessKey: 'xUA5X/BVqEwTQtzAsXctCrf1WqGP4EJjHKKq7vo'
+        });
+        AWS.config.region = 'us-east-1';
+
+        function uploadFile() {
+
+            var s3 = new AWS.S3({
+                params: { Bucket: 'csc1718s1' }
+            });
+            var file = document.getElementById('file').files[0];
+            if (file) {
+                s3.putObject({
+                    Key: file.name,
+                    ContentType: file.type,
+                    Body: file,
+                    ACL: "public-read"
+                },
+                    function (err, data) {
+                        if (data !== null) {
+                            alert("Got it!");
+                        }
+                        else {
+                            alert("Upload failed!");
+                        }
+                    });
+            }
+        }
+
+    </script>*@
+
+
+@*<script type="text/javascript">
+        var s3BucketName = 'csc1718s1';
+
+        function listObjs() {
+            var s3 = new AWS.S3({
+                params: { Bucket: s3BucketName }
+            });
+            s3.listObjects(function (error, data) {
+                if (error === null) {
+                    var html_keys = 'Object Keys:<br />';
+                    var html_imgs = '';
+                    jQuery.each(data.Contents, function (index, obj) {
+                        html_keys += (index + ': ' + obj.Key + '<br />');
+                        html_imgs += "<img src='" + "https://s3.amazonaws.com/"
+                            + s3BucketName + "/" + obj.Key + "'/><br/>";
+                    });
+                    jQuery("#objKeys").html(html_keys);
+                    jQuery("#objImgs").html(html_imgs);
+                } else { console.log(error); }
+            });
+        }
+    </script>*@

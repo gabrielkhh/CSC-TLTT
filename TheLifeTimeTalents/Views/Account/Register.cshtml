@@ -3,66 +3,118 @@
 }
 <div class="container body-content">
     <h2>@ViewData["Title"].</h2>
+    <div class="col-md-6 pull-left">
+        <form class="form-horizontal smaller-width">
+            <h4>Create a new account.</h4>
+            <hr />
+            <div class="form-group">
+                <label class="col-md-2 control-label">Username</label>
+                <div class="col-md-10">
+                    <input type="text" id="txtUsername" class="form-control" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">Email</label>
+                <div class="col-md-10">
+                    <input type="text" id="txtEmail" class="form-control" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">Password</label>
+                <div class="col-md-10">
+                    <input type="password" id="txtPassword" class="form-control" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">Confirm Password</label>
+                <div class="col-md-10">
+                    <input type="password" id="txtConfirmPassword" class="form-control" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <button id="btnRegister" type="submit" class="btn btn-default">Register</button>
+                </div>
+            </div>
 
-    <form class="form-horizontal smaller-width">
-        <h4>Create a new account.</h4>
-        <hr />
-        <div class="form-group">
-            <label class="col-md-2 control-label">Email</label>
-            <div class="col-md-10">
-                <input type="text" id="txtEmail" class="form-control" />
+            <div id="divError" class="alert alert-danger collapse">
+                <a id="linkClose" href="#" class="close">&times;</a>
+                <div id="divErrorText"></div>
             </div>
-        </div>
-        <div class="form-group">
-            <label class="col-md-2 control-label">Password</label>
-            <div class="col-md-10">
-                <input type="password" id="txtPassword" class="form-control" />
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="col-md-2 control-label">Confirm Password</label>
-            <div class="col-md-10">
-                <input type="password" id="txtConfirmPassword" class="form-control" />
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <button id="btnRegister" type="submit" class="btn btn-default">Register</button>
-            </div>
-        </div>
 
-        <div id="divError" class="alert alert-danger collapse">
-            <a id="linkClose" href="#" class="close">&times;</a>
-            <div id="divErrorText"></div>
-        </div>
-
-    </form>
+        </form>
+    </div>
 </div>
 
 <script type="text/javascript">
     $(document).ready(function () {
 
-        //NO FRONT END VALIDATION YET
+        function WebFormData(inUserName, inEmail, inPassword, inConfirmPassord) {
+            this.UserName = inUserName;
+            this.Email = inEmail;
+            this.Password = inPassword;
+            this.ConfirmPassword = inConfirmPassord;
+        }
 
         // Save the new user details
         $('#btnRegister').click(function () {
 
-            //Using CORS
-            $.ajax({
-                url: 'https://public-api.wordpress.com/rest/v1/sites/' + site_id + '/posts/new',
+            event.preventDefault();
+
+            ////NO FRONT END VALIDATION YET
+            collectedUserName = $('#txtUsername').val();
+            collectedTxtEmail = $('#txtEmail').val();
+            collectedTxtPassword = $('#txtPassword').val();
+            collectedTxtConfirmPassword = $('#txtConfirmPassword').val();
+
+            var webFormData = new WebFormData(collectedUserName, collectedTxtEmail,
+                collectedTxtPassword, collectedTxtConfirmPassword);
+
+            var webFormDataInString = JSON.stringify(webFormData);
+
+            $registerHandler = jQuery.ajax({
                 type: 'POST',
-                data: {
-                    email: $('#txtEmail').val(),
-                    password: $('#txtPassword').val(),
-                    confirmPassword: $('#txtConfirmPassword').val()
-                },
-                beforeSend: function (xhr) {
-                    xhr.setRequestHeader("Authorization", "BEARER " + access_token);
-                },
-                success: function (response) {
-                    console.log("Success")
-                }
+                url: 'http://talents.anythingabout.me/Account/Register',
+                crossDomain: true,
+                data: webFormDataInString,
+                dataType: 'json',
+                contentType: 'application/json',
             });
+
+            $registerHandler.done(function (data, textStatus, jqXHR) {
+                swal({
+                    title: "Successful!",
+                    text: "Registration Successful!",
+                    type: "success"
+                },
+                    function () {
+                        ignore = true;
+                        window.location.replace("/Home/Index");
+                    });
+            });
+
+            $registerHandler.fail(function (data, textStatus, jqXHR) {
+                toastr.options = {
+                    "closeButton": false,
+                    "debug": false,
+                    "newestOnTop": false,
+                    "progressBar": false,
+                    "positionClass": "toast-bottom-left",
+                    "preventDuplicates": false,
+                    "onclick": null,
+                    "showDuration": "300",
+                    "hideDuration": "1000",
+                    "timeOut": "5000",
+                    "extendedTimeOut": "1000",
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
+                }
+
+                toastr["error"](jqXHR, "Error")
+            });
+
         });
     });
 </script>

@@ -6,19 +6,19 @@
     <h2>@ViewData["Title"].</h2>
     <div class="row">
         <div class="col-md-6 pull-left">
-            <form class="form-horizontal smaller-width">
+            <form id="myForm" class="form-horizontal smaller-width" data-toggle="validator">
                 <h4>Use a local account to log in.</h4>
                 <hr />
                 <div class="form-group">
                     <label class="col-md-2 control-label">Email</label>
                     <div class="col-md-10">
-                        <input class="form-control" type="text" id="txtEmail" />
+                        <input class="form-control" type="text" id="txtEmail"  required=""/>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-md-2 control-label">Password</label>
                     <div class="col-md-10">
-                        <input class="form-control" type="text" id="txtPassword" />
+                        <input class="form-control" type="text" id="txtPassword"  required=""/>
                     </div>
                 </div>
                 <div class="form-group">
@@ -45,14 +45,14 @@
 <script type="text/javascript">
     $(document).ready(function () {
 
-
         function WebFormData(inEmail, inPassword) {
             this.Email = inemail;
             this.Password = inPassword;
         }
 
-        // Save the new user details
         $('#btnLogin').click(function () {
+
+            $('#myForm').validator()
 
             //NO FRONT END VALIDATION YET
             collectedTxtEmail = $('#txtEmail').val();

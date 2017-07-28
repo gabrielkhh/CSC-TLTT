@@ -4,31 +4,31 @@
 <div class="container body-content">
     <h2>@ViewData["Title"].</h2>
     <div class="col-md-6 pull-left">
-        <form class="form-horizontal smaller-width">
+        <form id="myForm" class="form-horizontal smaller-width" data-toggle="validator">
             <h4>Create a new account.</h4>
             <hr />
             <div class="form-group">
                 <label class="col-md-2 control-label">Username</label>
                 <div class="col-md-10">
-                    <input type="text" id="txtUsername" class="form-control" />
+                    <input type="text" id="txtUsername" class="form-control" required=""/>
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-md-2 control-label">Email</label>
                 <div class="col-md-10">
-                    <input type="text" id="txtEmail" class="form-control" />
+                    <input type="text" id="txtEmail" class="form-control" required=""/>
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-md-2 control-label">Password</label>
                 <div class="col-md-10">
-                    <input type="password" id="txtPassword" class="form-control" />
+                    <input type="password" id="txtPassword" class="form-control" required=""/>
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-md-2 control-label">Confirm Password</label>
                 <div class="col-md-10">
-                    <input type="password" id="txtConfirmPassword" class="form-control" />
+                    <input type="password" id="txtConfirmPassword" class="form-control" required="" />
                 </div>
             </div>
             <div class="form-group toCenter">
@@ -54,8 +54,9 @@
             this.CaptchaResponse = inCaptchaResponse;
         }
 
-        // Save the new user details
         $('#btnRegister').click(function () {
+
+            $('#myForm').validator()
 
             event.preventDefault();
 

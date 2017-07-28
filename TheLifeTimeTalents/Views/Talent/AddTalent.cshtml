@@ -11,75 +11,65 @@
     <h4>Upload a new talent.</h4>
     <hr />
 
-
-    <div class="form-group">
-        <label class="col-md-2 control-label">Talent Name</label>
-        <div class="col-md-10">
-            <input class="form-control" />
+    <form id="myForm" data-toggle="validator">
+        <div class="form-group">
+            <label class="col-md-2 control-label">Talent Name</label>
+            <div class="col-md-10">
+                <input id="txtTalentName" class="form-control" required="" />
+            </div>
         </div>
-    </div>
 
-    <br /><br /><br />
+        <br /><br /><br />
 
-    <div class="form-group">
-        <label class="col-md-2 control-label">Short Name</label>
-        <div class="col-md-10">
-            <input class="form-control" />
+        <div class="form-group">
+            <label class="col-md-2 control-label">Short Name</label>
+            <div class="col-md-10">
+                <input id="txtShortName" class="form-control" required="" />
+            </div>
         </div>
-    </div>
 
-    <br /><br /><br />
+        <br /><br /><br />
 
-    <div class="form-group">
-        <label class="col-md-2 control-label">Reknown</label>
-        <div class="col-md-10">
-            <input class="form-control" />
+        <div class="form-group">
+            <label class="col-md-2 control-label">Reknown</label>
+            <div class="col-md-10">
+                <input id="txtReknown" class="form-control" required="" />
+            </div>
         </div>
-    </div>
 
-    <br /><br /><br />
+        <br /><br /><br />
 
-    <div class="form-group">
-        <label class="col-md-2 control-label">Bio</label>
-        <div class="col-md-10">
-            <textarea class="form-control"></textarea>
+        <div class="form-group">
+            <label class="col-md-2 control-label">Bio</label>
+            <div class="col-md-10">
+                <textarea id="txtBio" class="form-control" required=""></textarea>
+            </div>
         </div>
-    </div>
 
-    <br /><br /><br />
+        <br /><br /><br />
 
-    <div class="form-group">
-        <label class="col-md-2 control-label">Make Private</label>
-        <div class="col-md-10">
-            <input type="checkbox" name="privacy" value="privacy">
+        <div class="form-group">
+            <label class="col-md-2 control-label">Make Private</label>
+            <div class="col-md-10">
+                <input type="checkbox" id="privacy" name="privacy" value="privacy">
+            </div>
         </div>
-    </div>
 
-    <br /><br /><br />
+        <br /><br /><br />
 
-    <div class="form-group">
-        <label class="col-md-2 control-label">Image</label>
-        <div class="col-md-10">
-            <input type="file" name="file" id="file" value="dataFile" required="" input-group-lg" multiple />
+        <div class="form-group">
+            <label class="col-md-2 control-label">Image</label>
+            <div class="col-md-10">
+                <input type="file" name="file" id="file" value="dataFile" required="" input-group-lg" />
+            </div>
         </div>
-    </div>
 
-    <div class="form-group">
-        <div class="col-md-offset-2 col-md-10 padding-top padding-bottom">
-            <button id="uploadFile" type="submit" class="btn btn-default" onclick="uploadFile()">Upload</button>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10 padding-top padding-bottom">
+                <button id="uploadFile" type="submit" class="btn btn-default">Upload</button>
+            </div>
         </div>
-    </div>
-
-
-    @*<div class="form-group">
-        <div class="col-md-offset-2 col-md-10 padding-top">
-            <button onclick="listObjs()" class="btn btn-default"> S3 - List Objects</button>
-        </div>
-    </div>
-
-    <div id="objKeys"></div>
-    <div id="objImgs"></div>*@
-
+    </form>
 </div>
 <script>
 
@@ -90,7 +80,7 @@
     window.$PhotoInputElement.fileinput({
         uploadUrl: '/API/Image/UploadImage',
         uploadAsync: false,
-        maxFileCount: 3,
+        maxFileCount: 1,
         type: 'post',
         overwriteInitial: false,
         showUpload: false,
@@ -111,6 +101,81 @@
         console.dir(data);
         $('body').fadeOut(2000, '/Home/Index');
     });
+
+    $(document).ready(function () {
+
+        var isPrivate = false;
+
+        function WebFormData(inTalentName, inShortName, inReknown, inBio, inIsPrivate) {
+            this.TalentName = inTalentName;
+            this.ShortName = inShortName;
+            this.Reknown = inReknown;
+            this.Bio = inBio;
+            this.IsPrivate = inIsPrivate;
+        }
+
+        $('#uploadFile').click(function () {
+
+            $('#myForm').validator()
+
+            //NO FRONT END VALIDATION YET
+            collectedTxtTalentName = $('#txtTalentName').val();
+            collectedTxtShortName = $('#txtShortName').val();
+            collectedTxtReknown = $('#txtReknown').val();
+            collectedTxtBio = $('#txtBio').val();
+
+            if ($("#privacy").is(':checked')) {
+                isPrivate = true;
+            }
+            else {
+                isPrivate = false;
+            }
+
+            var webFormData = new WebFormData(collectedTxtTalentName,
+                collectedTxtShortName, collectedTxtReknown, collectedTxtBio, isPrivate);
+
+            var webFormDataInString = JSON.stringify(webFormData);
+
+            console.log(webFormDataInString);
+
+            $talentHandler = jQuery.ajax({
+                type: 'POST',
+                url: 'http://server.anythingabout.me/Account/Login',
+                crossDomain: true,
+                data: webFormDataInString,
+                dataType: 'json',
+                contentType: 'application/json',
+            });
+
+            $talentHandler.done(function (data, textStatus, jqXHR) {
+                console.log("Success");
+                window.location.replace("/Home/Index");
+            });
+
+            $talentHandler.fail(function (data, textStatus, jqXHR) {
+                toastr.options = {
+                    "closeButton": false,
+                    "debug": false,
+                    "newestOnTop": false,
+                    "progressBar": false,
+                    "positionClass": "toast-bottom-left",
+                    "preventDuplicates": false,
+                    "onclick": null,
+                    "showDuration": "300",
+                    "hideDuration": "1000",
+                    "timeOut": "5000",
+                    "extendedTimeOut": "1000",
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
+                }
+
+                toastr["error"](jqXHR, "Error")
+            });
+        });
+    });
+
 </script>
 
 @*<script>

@@ -66,12 +66,12 @@
             collectedTxtConfirmPassword = $('#txtConfirmPassword').val();
             collectedCaptchaResponse = grecaptcha.getResponse();
 
-            console.log("Response " + collectedCaptchaResponse);
-
             var webFormData = new WebFormData(collectedUserName, collectedTxtEmail,
                 collectedTxtPassword, collectedTxtConfirmPassword, collectedCaptchaResponse);
 
             var webFormDataInString = JSON.stringify(webFormData);
+
+            console.log(webFormDataInString);
 
             $registerHandler = jQuery.ajax({
                 type: 'POST',

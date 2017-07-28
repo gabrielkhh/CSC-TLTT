@@ -1,4 +1,6 @@
-﻿@{
+﻿<script src='https://www.google.com/recaptcha/api.js'></script>
+
+@{
     ViewData["Title"] = "Register";
 }
 <div class="container body-content">
@@ -31,6 +33,9 @@
                     <input type="password" id="txtConfirmPassword" class="form-control" />
                 </div>
             </div>
+
+            <div id="captcha" class="g-recaptcha" data-sitekey="6LeR1SoUAAAAAI3GM6RVCPtcpZCZuIlNwthwbRKl"></div>
+
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
                     <button id="btnRegister" type="submit" class="btn btn-default">Register</button>
@@ -55,6 +60,10 @@
             this.Password = inPassword;
             this.ConfirmPassword = inConfirmPassord;
         }
+
+        var collectedCaptchaResult = grecaptcha.getResponse(captcha);
+
+        console.log(collectedCaptchaResult);
 
         // Save the new user details
         $('#btnRegister').click(function () {

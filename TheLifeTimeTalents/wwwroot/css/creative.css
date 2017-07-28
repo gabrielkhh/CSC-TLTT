@@ -121,6 +121,10 @@ aside {
     padding: 0;
 }
 
+.padding-bottom{
+    padding-bottom:40px;
+}
+
 .navbar-default {
     background-color: white;
     border-color: rgba(34, 34, 34, 0.05);

@@ -56,8 +56,10 @@
             this.ConfirmPassword = inConfirmPassord;
         }
 
-        var collectedCaptchaResult = grecaptcha.getResponse($('.captcha'));
-
+        function onloadCallback() {
+            var collectedCaptchaResult = grecaptcha.getResponse($('.captcha'));
+        }
+        
         console.log(collectedCaptchaResult);
 
         // Save the new user details

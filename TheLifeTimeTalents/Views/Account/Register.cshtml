@@ -35,7 +35,8 @@
             </div>
 
             <div class="form-group">
-                <div id="captcha" class="g-recaptcha" data-sitekey="6LeR1SoUAAAAAI3GM6RVCPtcpZCZuIlNwthwbRKl"></div>
+                <div id="html_element"></div>
+                @*<div id="captcha" class="g-recaptcha" data-sitekey="6LeR1SoUAAAAAI3GM6RVCPtcpZCZuIlNwthwbRKl"></div>*@
             </div>
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
@@ -56,21 +57,25 @@
             this.ConfirmPassword = inConfirmPassord;
         }
 
+        var onloadCallback = function () {
+            grecaptcha.render('html_element', {
+                'sitekey': '6LeR1SoUAAAAAI3GM6RVCPtcpZCZuIlNwthwbRKl'
+            });
+        };
+
         // Save the new user details
         $('#btnRegister').click(function () {
 
             event.preventDefault();
-
-            function onloadCallback() {
-                var collectedCaptchaResult = grecaptcha.getResponse($('.captcha'));
-                console.log(collectedCaptchaResult);
-            }     
 
             ////NO FRONT END VALIDATION YET
             collectedUserName = $('#txtUsername').val();
             collectedTxtEmail = $('#txtEmail').val();
             collectedTxtPassword = $('#txtPassword').val();
             collectedTxtConfirmPassword = $('#txtConfirmPassword').val();
+            collectedCaptchaResponse = grecaptcha.getResponse();
+
+            conso.log("Response " + collectedCaptchaResponse);
 
             var webFormData = new WebFormData(collectedUserName, collectedTxtEmail,
                 collectedTxtPassword, collectedTxtConfirmPassword);

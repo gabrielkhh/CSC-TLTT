@@ -9,6 +9,12 @@
                 <h4>Create a new account.</h4>
                 <hr />
                 <div class="form-group">
+                    <label class="col-md-2 control-label">Name</label>
+                    <div class="col-md-10">
+                        <input type="text" id="txtName" name="txtName" class="form-control" />
+                    </div>
+                </div>
+                <div class="form-group">
                     <label class="col-md-2 control-label">Username</label>
                     <div class="col-md-10">
                         <input type="text" id="txtUsername" name="txtUsername" class="form-control" />
@@ -50,6 +56,9 @@
 
         $("#myForm").validate({
             rules: {
+                txtName: {
+                    required: true,
+                },
                 txtUsername: {
                     required: true,
                 },
@@ -65,6 +74,9 @@
                 }
             },
             messages: {
+                txtName: {
+                    required: "Please enter your name",
+                },
                 txtUsername: {
                     required: "Please enter your username",
                 },
@@ -84,7 +96,8 @@
 
                 event.preventDefault();
 
-                function WebFormData(inUserName, inEmail, inPassword, inConfirmPassord, inCaptchaResponse) {
+                function WebFormData(inName, inUserName, inEmail, inPassword, inConfirmPassord, inCaptchaResponse) {
+                    this.DisplayName = inName;
                     this.UserName = inUserName;
                     this.Email = inEmail;
                     this.Password = inPassword;
@@ -92,13 +105,14 @@
                     this.CaptchaResponse = inCaptchaResponse;
                 }
 
+                collectedName = $('#txtName').val();
                 collectedUserName = $('#txtUsername').val();
                 collectedTxtEmail = $('#txtEmail').val();
                 collectedTxtPassword = $('#txtPassword').val();
                 collectedTxtConfirmPassword = $('#txtConfirmPassword').val();
                 collectedCaptchaResponse = grecaptcha.getResponse();
 
-                var webFormData = new WebFormData(collectedUserName, collectedTxtEmail,
+                var webFormData = new WebFormData(collectedName, collectedUserName, collectedTxtEmail,
                     collectedTxtPassword, collectedTxtConfirmPassword, collectedCaptchaResponse);
 
                 var webFormDataInString = JSON.stringify(webFormData);

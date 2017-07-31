@@ -203,21 +203,19 @@
 
     loadTalentData();
 
-    var accessToken = sessionStorage.getItem('accessToken');
-
-    function setHeader(xhr) {
-        xhr.setRequestHeader('Authorization', 'bearer ' + accessToken);
-    }
-
-
     function loadTalentData() {
-        loadTalentData = jQuery.ajax({
+
+        var accessToken = sessionStorage.getItem('accessToken');
+
+        loadTalentDataHandler = jQuery.ajax({
             method: 'GET',
             url: 'http://server.anythingabout.me/API/Talents',
             crossDomain: true,
             dataType: 'json',
             cache: false,
-            beforeSend: setHeader,
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader('Authorization', 'bearer ' + accessToken)
+            }
         })
         loadTalentDataHandler.done(function (data, textStatus, jqXHR) {
 

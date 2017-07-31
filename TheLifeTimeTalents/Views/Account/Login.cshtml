@@ -6,19 +6,19 @@
     <h2>@ViewData["Title"].</h2>
     <div class="row">
         <div class="col-md-6 pull-left">
-            <form id="myForm" class="form-horizontal smaller-width" data-toggle="validator">
+            <form id="myForm" class="form-horizontal smaller-width">
                 <h4>Use a local account to log in.</h4>
                 <hr />
                 <div class="form-group">
                     <label class="col-md-2 control-label">Email</label>
                     <div class="col-md-10">
-                        <input class="form-control" type="text" id="txtEmail"  required=""/>
+                        <input class="form-control" id="txtEmail" name="txtEmail" type="email" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-md-2 control-label">Password</label>
                     <div class="col-md-10">
-                        <input class="form-control" type="text" id="txtPassword"  required=""/>
+                        <input class="form-control" id="txtPassword" name="txtPassword" type="password" />
                     </div>
                 </div>
                 <div class="form-group">
@@ -42,64 +42,83 @@
     </div>
 </div>
 
-<script type="text/javascript">
+<script>
     $(document).ready(function () {
 
-        function WebFormData(inEmail, inPassword) {
-            this.Email = inemail;
-            this.Password = inPassword;
-        }
+        $("#myForm").validate({
+            rules: {
+                txtEmail: {
+                    required: true,
+                },
+                txtPassword: {
+                    required: true,
+                },
+            },
+            messages: {
+                txtEmail: {
+                    required: "Please enter your email",
+                },
+                txtPassword: {
+                    required: "Please enter your password",
+                },
+            },
+            onkeyup: false, //turn off auto validate whilst typing
+            submitHandler: function (form) {
 
-        $('#btnLogin').click(function () {
-            event.preventDefault();
-            $('#myForm').validator()
+                event.preventDefault();
 
-            //NO FRONT END VALIDATION YET
-            collectedTxtEmail = $('#txtEmail').val();
-            collectedTxtPassword = $('#txtPassword').val();
-
-            var webFormData = new WebFormData(collectedTxtEmail,
-                collectedTxtPassword);
-
-            var webFormDataInString = JSON.stringify(webFormData);
-
-            console.log(webFormDataInString);
-
-            $loginHandler = jQuery.ajax({
-                type: 'POST',
-                url: 'http://server.anythingabout.me/Account/Login',
-                crossDomain: true,
-                data: webFormDataInString,
-                dataType: 'json',
-                contentType: 'application/json',
-            });
-
-            $loginHandler.done(function (data, textStatus, jqXHR) {
-                console.log("Success");
-                window.location.replace("/Home/Index");
-            });
-
-            $loginHandler.fail(function (data, textStatus, jqXHR) {
-                toastr.options = {
-                    "closeButton": false,
-                    "debug": false,
-                    "newestOnTop": false,
-                    "progressBar": false,
-                    "positionClass": "toast-bottom-left",
-                    "preventDuplicates": false,
-                    "onclick": null,
-                    "showDuration": "300",
-                    "hideDuration": "1000",
-                    "timeOut": "5000",
-                    "extendedTimeOut": "1000",
-                    "showEasing": "swing",
-                    "hideEasing": "linear",
-                    "showMethod": "fadeIn",
-                    "hideMethod": "fadeOut"
+                function WebFormData(inEmail, inPassword) {
+                    this.Email = inEmail;
+                    this.Password = inPassword;
                 }
 
-                toastr["error"](jqXHR, "Error")
-            });
+                collectedTxtEmail = $('#txtEmail').val();
+                collectedTxtPassword = $('#txtPassword').val();
+
+                var webFormData = new WebFormData(collectedTxtEmail,
+                    collectedTxtPassword);
+
+                var webFormDataInString = JSON.stringify(webFormData);
+
+                console.log(webFormDataInString);
+
+                $loginHandler = jQuery.ajax({
+                    type: 'POST',
+                    url: 'http://server.anythingabout.me/Account/Login',
+                    crossDomain: true,
+                    data: webFormDataInString,
+                    dataType: 'json',
+                    contentType: 'application/json',
+                });
+
+                $loginHandler.done(function (data, textStatus, jqXHR) {
+                    console.log("Success");
+                    window.location.replace("/Home/Index");
+                });
+
+                $loginHandler.fail(function (data, textStatus, jqXHR) {
+                    toastr.options = {
+                        "closeButton": false,
+                        "debug": false,
+                        "newestOnTop": false,
+                        "progressBar": false,
+                        "positionClass": "toast-bottom-left",
+                        "preventDuplicates": false,
+                        "onclick": null,
+                        "showDuration": "300",
+                        "hideDuration": "1000",
+                        "timeOut": "5000",
+                        "extendedTimeOut": "1000",
+                        "showEasing": "swing",
+                        "hideEasing": "linear",
+                        "showMethod": "fadeIn",
+                        "hideMethod": "fadeOut"
+                    }
+
+                    toastr["error"](jqXHR, "Error")
+                });
+            }
         });
+
     });
 </script>

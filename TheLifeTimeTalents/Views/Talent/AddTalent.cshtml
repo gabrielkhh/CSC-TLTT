@@ -15,7 +15,7 @@
         <div class="form-group">
             <label class="col-md-2 control-label">Talent Name</label>
             <div class="col-md-10">
-                <input id="txtTalentName" class="form-control" required="" />
+                <input type="text" id="txtTalentName" name="txtTalentName" class="form-control"/>
             </div>
         </div>
 
@@ -24,7 +24,7 @@
         <div class="form-group">
             <label class="col-md-2 control-label">Short Name</label>
             <div class="col-md-10">
-                <input id="txtShortName" class="form-control" required="" />
+                <input type="text" id="txtShortName" name="txtShortName" class="form-control"/>
             </div>
         </div>
 
@@ -33,7 +33,7 @@
         <div class="form-group">
             <label class="col-md-2 control-label">Reknown</label>
             <div class="col-md-10">
-                <input id="txtReknown" class="form-control" required="" />
+                <input type="text" id="txtReknown" name="txtReknown" class="form-control"/>
             </div>
         </div>
 
@@ -42,7 +42,7 @@
         <div class="form-group">
             <label class="col-md-2 control-label">Bio</label>
             <div class="col-md-10">
-                <textarea id="txtBio" class="form-control" required=""></textarea>
+                <textarea type="text" id="txtBio" name="txtBio" class="form-control"></textarea>
             </div>
         </div>
 
@@ -60,10 +60,9 @@
         <div class="form-group">
             <label class="col-md-2 control-label">Image</label>
             <div class="col-md-10">
-                <input type="file" name="file" id="file" value="dataFile" required="" input-group-lg" />
+                <input type="file" name="file" id="file" value="dataFile" input-group-lg" required/>
             </div>
-        </div>
-
+        </div>     
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10 padding-top padding-bottom">
                 <button id="uploadFile" type="submit" class="btn btn-default">Upload</button>
@@ -74,6 +73,7 @@
 <script>
 
     $("[name='privacy']").bootstrapSwitch();
+    var isPrivate = false;
 
     window.$PhotoInputElement = $('#file');
 
@@ -104,76 +104,113 @@
 
     $(document).ready(function () {
 
-        var isPrivate = false;
+        $("#myForm").validate({
+            rules: {
+                txtTalentName: {
+                    required: true,
+                },
+                txtShortName: {
+                    required: true,
+                },
+                txtReknown: {
+                    required: true,
+                },
+                txtBio: {
+                    required: true,
+                },
+                file: {
+                    required: true,
+                },
+            },
+            messages: {
+                txtTalentName: {
+                    required: "Please enter your talent name",
+                },
+                txtShortName: {
+                    required: "Please enter your short name",
+                },
+                txtReknown: {
+                    required: "Please enter your reknown",
+                },
+                txtBio: {
+                    required: "Please enter your bio",
+                },
+                file: {
+                    required: "Please select a file",
+                },
+            },
+            onkeyup: false, //turn off auto validate whilst typing
+            submitHandler: function (form) {
 
-        function WebFormData(inTalentName, inShortName, inReknown, inBio, inIsPrivate) {
-            this.TalentName = inTalentName;
-            this.ShortName = inShortName;
-            this.Reknown = inReknown;
-            this.Bio = inBio;
-            this.IsPrivate = inIsPrivate;
-        }
-
-        $('#uploadFile').click(function () {
-
-            $('#myForm').validator()
-
-            //NO FRONT END VALIDATION YET
-            collectedTxtTalentName = $('#txtTalentName').val();
-            collectedTxtShortName = $('#txtShortName').val();
-            collectedTxtReknown = $('#txtReknown').val();
-            collectedTxtBio = $('#txtBio').val();
-
-            if ($("#privacy").is(':checked')) {
-                isPrivate = true;
-            }
-            else {
-                isPrivate = false;
-            }
-
-            var webFormData = new WebFormData(collectedTxtTalentName,
-                collectedTxtShortName, collectedTxtReknown, collectedTxtBio, isPrivate);
-
-            var webFormDataInString = JSON.stringify(webFormData);
-
-            console.log(webFormDataInString);
-
-            $talentHandler = jQuery.ajax({
-                type: 'POST',
-                url: 'http://server.anythingabout.me/Account/Login',
-                crossDomain: true,
-                data: webFormDataInString,
-                dataType: 'json',
-                contentType: 'application/json',
-            });
-
-            $talentHandler.done(function (data, textStatus, jqXHR) {
-                console.log("Success");
-                window.location.replace("/Home/Index");
-            });
-
-            $talentHandler.fail(function (data, textStatus, jqXHR) {
-                toastr.options = {
-                    "closeButton": false,
-                    "debug": false,
-                    "newestOnTop": false,
-                    "progressBar": false,
-                    "positionClass": "toast-bottom-left",
-                    "preventDuplicates": false,
-                    "onclick": null,
-                    "showDuration": "300",
-                    "hideDuration": "1000",
-                    "timeOut": "5000",
-                    "extendedTimeOut": "1000",
-                    "showEasing": "swing",
-                    "hideEasing": "linear",
-                    "showMethod": "fadeIn",
-                    "hideMethod": "fadeOut"
+                function WebFormData(inTalentName, inShortName, inReknown, inBio, inIsPrivate) {
+                    this.TalentName = inTalentName;
+                    this.ShortName = inShortName;
+                    this.Reknown = inReknown;
+                    this.Bio = inBio;
+                    this.IsPrivate = inIsPrivate;
                 }
 
-                toastr["error"](jqXHR, "Error")
-            });
+                $('#uploadFile').click(function () {
+
+                    //NO FRONT END VALIDATION YET
+                    collectedTxtTalentName = $('#txtTalentName').val();
+                    collectedTxtShortName = $('#txtShortName').val();
+                    collectedTxtReknown = $('#txtReknown').val();
+                    collectedTxtBio = $('#txtBio').val();
+
+                    if ($("#privacy").is(':checked')) {
+                        isPrivate = true;
+                    }
+                    else {
+                        isPrivate = false;
+                    }
+
+                    var webFormData = new WebFormData(collectedTxtTalentName,
+                        collectedTxtShortName, collectedTxtReknown, collectedTxtBio, isPrivate);
+
+                    var webFormDataInString = JSON.stringify(webFormData);
+
+                    console.log(webFormDataInString);
+
+                    $talentHandler = jQuery.ajax({
+                        type: 'POST',
+                        url: 'http://server.anythingabout.me/Account/Login',
+                        crossDomain: true,
+                        data: webFormDataInString,
+                        dataType: 'json',
+                        contentType: 'application/json',
+                    });
+
+                    $talentHandler.done(function (data, textStatus, jqXHR) {
+                        console.log("Success");
+                        window.location.replace("/Home/Index");
+                    });
+
+                    $talentHandler.fail(function (data, textStatus, jqXHR) {
+                        toastr.options = {
+                            "closeButton": false,
+                            "debug": false,
+                            "newestOnTop": false,
+                            "progressBar": false,
+                            "positionClass": "toast-bottom-left",
+                            "preventDuplicates": false,
+                            "onclick": null,
+                            "showDuration": "300",
+                            "hideDuration": "1000",
+                            "timeOut": "5000",
+                            "extendedTimeOut": "1000",
+                            "showEasing": "swing",
+                            "hideEasing": "linear",
+                            "showMethod": "fadeIn",
+                            "hideMethod": "fadeOut"
+                        }
+
+                        toastr["error"](jqXHR, "Error")
+                    });
+                });
+            }
         });
+
     });
 
 </script>

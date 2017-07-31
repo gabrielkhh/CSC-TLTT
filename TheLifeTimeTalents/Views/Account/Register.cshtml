@@ -4,31 +4,31 @@
 <div class="container body-content">
     <h2>@ViewData["Title"].</h2>
     <div class="col-md-6 pull-left">
-        <form id="myForm" class="form-horizontal smaller-width" data-toggle="validator">
+        <form id="myForm" class="form-horizontal smaller-width">
             <h4>Create a new account.</h4>
             <hr />
             <div class="form-group">
                 <label class="col-md-2 control-label">Username</label>
                 <div class="col-md-10">
-                    <input type="text" id="txtUsername" class="form-control" required=""/>
+                    <input type="text" id="txtUsername" name="txtUsername" class="form-control" />
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-md-2 control-label">Email</label>
                 <div class="col-md-10">
-                    <input type="text" id="txtEmail" class="form-control" required=""/>
+                    <input id="txtEmail" name="txtEmail" type="email" class="form-control" />
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-md-2 control-label">Password</label>
                 <div class="col-md-10">
-                    <input type="password" id="txtPassword" class="form-control" required=""/>
+                    <input type="password" id="txtPassword" name="txtPassword" class="form-control" />
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-md-2 control-label">Confirm Password</label>
                 <div class="col-md-10">
-                    <input type="password" id="txtConfirmPassword" class="form-control" required="" />
+                    <input type="password" id="txtConfirmPassword" name="txtConfirmPassword" class="form-control" />
                 </div>
             </div>
             <div class="form-group toCenter">
@@ -43,80 +43,110 @@
     </div>
 </div>
 
-<script type="text/javascript">
+<script>
     $(document).ready(function () {
 
-        function WebFormData(inUserName, inEmail, inPassword, inConfirmPassord, inCaptchaResponse) {
-            this.UserName = inUserName;
-            this.Email = inEmail;
-            this.Password = inPassword;
-            this.ConfirmPassword = inConfirmPassord;
-            this.CaptchaResponse = inCaptchaResponse;
-        }
-
-        $('#btnRegister').click(function () {
-
-            $('#myForm').validator()
-
-            event.preventDefault();
-
-            ////NO FRONT END VALIDATION YET
-            collectedUserName = $('#txtUsername').val();
-            collectedTxtEmail = $('#txtEmail').val();
-            collectedTxtPassword = $('#txtPassword').val();
-            collectedTxtConfirmPassword = $('#txtConfirmPassword').val();
-            collectedCaptchaResponse = grecaptcha.getResponse();
-
-            var webFormData = new WebFormData(collectedUserName, collectedTxtEmail,
-                collectedTxtPassword, collectedTxtConfirmPassword, collectedCaptchaResponse);
-
-            var webFormDataInString = JSON.stringify(webFormData);
-
-            console.log(webFormDataInString);
-
-            $registerHandler = jQuery.ajax({
-                type: 'POST',
-                url: 'http://server.anythingabout.me/Account/Register',
-                crossDomain: true,
-                data: webFormDataInString,
-                dataType: 'json',
-                contentType: 'application/json',
-            });
-
-            $registerHandler.done(function (data, textStatus, jqXHR) {
-                swal({
-                    title: "Successful!",
-                    text: "Registration Successful!",
-                    type: "success"
+        $("#myForm").validate({
+            rules: {
+                txtUsername: {
+                    required: true,
                 },
-                    function () {
-                        ignore = true;
-                        window.location.replace("/Home/Index");
-                    });
-            });
+                txtEmail: {
+                    required: true,
+                },
+                txtPassword: {
+                    required: true,
+                },
+                txtConfirmPassword: {
+                    required: true,
+                    equalTo: "#txtPassword"
+                }
+            },
+            messages: {
+                txtUsername: {
+                    required: "Please enter your username",
+                },
+                txtEmail: {
+                    required: "Please enter your email",
+                },
+                txtPassword: {
+                    required: "Please enter your password",
+                },
+                txtConfirmPassword: {
+                    required: "Please confirm your password",
+                    equalTo: "The passwords do not match",
+                }
+            },
+            onkeyup: false, //turn off auto validate whilst typing
+            submitHandler: function (form) {
 
-            $registerHandler.fail(function (data, textStatus, jqXHR) {
-                toastr.options = {
-                    "closeButton": false,
-                    "debug": false,
-                    "newestOnTop": false,
-                    "progressBar": false,
-                    "positionClass": "toast-bottom-left",
-                    "preventDuplicates": false,
-                    "onclick": null,
-                    "showDuration": "300",
-                    "hideDuration": "1000",
-                    "timeOut": "5000",
-                    "extendedTimeOut": "1000",
-                    "showEasing": "swing",
-                    "hideEasing": "linear",
-                    "showMethod": "fadeIn",
-                    "hideMethod": "fadeOut"
+                event.preventDefault();
+
+                function WebFormData(inUserName, inEmail, inPassword, inConfirmPassord, inCaptchaResponse) {
+                    this.UserName = inUserName;
+                    this.Email = inEmail;
+                    this.Password = inPassword;
+                    this.ConfirmPassword = inConfirmPassord;
+                    this.CaptchaResponse = inCaptchaResponse;
                 }
 
-                toastr["error"](jqXHR, "Error")
-            });
+                collectedUserName = $('#txtUsername').val();
+                collectedTxtEmail = $('#txtEmail').val();
+                collectedTxtPassword = $('#txtPassword').val();
+                collectedTxtConfirmPassword = $('#txtConfirmPassword').val();
+                collectedCaptchaResponse = grecaptcha.getResponse();
 
+                var webFormData = new WebFormData(collectedUserName, collectedTxtEmail,
+                    collectedTxtPassword, collectedTxtConfirmPassword, collectedCaptchaResponse);
+
+                var webFormDataInString = JSON.stringify(webFormData);
+
+                console.log(webFormDataInString);
+
+                $registerHandler = jQuery.ajax({
+                    type: 'POST',
+                    url: 'http://server.anythingabout.me/Account/Register',
+                    crossDomain: true,
+                    data: webFormDataInString,
+                    dataType: 'json',
+                    contentType: 'application/json',
+                });
+
+                $registerHandler.done(function (data, textStatus, jqXHR) {
+                    swal({
+                        title: "Successful!",
+                        text: "Registration Successful!",
+                        type: "success"
+                    },
+                        function () {
+                            ignore = true;
+                            window.location.replace("/Home/Index");
+                        });
+                });
+
+                $registerHandler.fail(function (data, textStatus, jqXHR) {
+                    toastr.options = {
+                        "closeButton": false,
+                        "debug": false,
+                        "newestOnTop": false,
+                        "progressBar": false,
+                        "positionClass": "toast-bottom-left",
+                        "preventDuplicates": false,
+                        "onclick": null,
+                        "showDuration": "300",
+                        "hideDuration": "1000",
+                        "timeOut": "5000",
+                        "extendedTimeOut": "1000",
+                        "showEasing": "swing",
+                        "hideEasing": "linear",
+                        "showMethod": "fadeIn",
+                        "hideMethod": "fadeOut"
+                    }
+
+                    toastr["error"](jqXHR, "Error")
+                });
+            }
         });
+
     });
 </script>

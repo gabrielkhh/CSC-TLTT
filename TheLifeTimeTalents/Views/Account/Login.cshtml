@@ -92,8 +92,9 @@
                 });
 
                 $loginHandler.done(function (data, textStatus, jqXHR) {
-                    console.log("Success");
-                    window.location.replace("/Home/Index");
+                    console.log(data)
+                    sessionStorage.setItem('token', 'value');
+                    //window.location.replace("/Home/Index");
                 });
 
                 $loginHandler.fail(function (data, textStatus, jqXHR) {
@@ -114,7 +115,6 @@
                         "showMethod": "fadeIn",
                         "hideMethod": "fadeOut"
                     }
-
                     toastr["error"](jqXHR, "Error")
                 });
             }

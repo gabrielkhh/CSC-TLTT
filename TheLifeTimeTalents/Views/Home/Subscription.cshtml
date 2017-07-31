@@ -12,13 +12,16 @@
     <p>Simply pay a one-time subsciption fee of S$10 and start enjoying the Search function! </p>
     <p>Total Amount: S$10</p>
 
-    <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
-            data-key="pk_test_2uTO5iGEzuZns66zBpAO3gks"
-            data-amount="1000"
-            data-name="The Life Time Talents"
-            data-description="Lifetime Subscription"
-            @*data-image="https://stripe.com/img/documentation/checkout/marketplace.png" *@
-            data-locale="auto"
-            data-currency="sgd">
-    </script>
+    <form action="http://server.anythingabout.me" method="POST">
+        <script src="//checkout.stripe.com/v2/checkout.js"
+                class="stripe-button"
+                data-key="pk_live_cF98jjTrDp9t9BHl5BJHba8v"
+                data-locale="auto"
+                data-name="The Life Time Talents"
+                data-description="Lifetime Subscription"
+                data-amount="1000"
+                data-currency="sgd">
+        </script>
+    </form>
+
 </div>

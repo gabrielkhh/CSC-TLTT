@@ -92,9 +92,14 @@
                 });
 
                 $loginHandler.done(function (data, textStatus, jqXHR) {
-                    console.log(data)
-                    sessionStorage.setItem('token', 'value');
-                    //window.location.replace("/Home/Index");
+
+                    accessToken = data.access_token;
+                    idToken = data.id_token;
+
+                    sessionStorage.clear();
+                    sessionStorage.setItem('accessToken', accessToken);
+                    sessionStorage.setItem('idToken', idToken);
+                    window.location.replace("/Home/Index");
                 });
 
                 $loginHandler.fail(function (data, textStatus, jqXHR) {

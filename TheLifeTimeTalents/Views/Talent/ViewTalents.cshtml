@@ -200,49 +200,49 @@
 </div>
 
 <script type="text/javascript">
-    AWS.config.update({
-        accessKeyId: 'AKIAIVXFDITHKGUQUDIQ',
-        secretAccessKey: 'xUA5X/BVqEwTQtzAsXctCrf1WqGP4EJjHKKq7vo'
-    });
-    AWS.config.region = 'us-east-1';
+    //loadSubscriptionFeeData();
 
-    var s3BucketName = 'csc1718s1';
+    var accessToken = sessionStorage.getItem('accessToken');
 
-    function listObjs() {
-        var s3 = new AWS.S3({
-            params: { Bucket: s3BucketName }
-        });
-        s3.listObjects(function (error, data) {
-            if (error === null) {
-                var html_keys = 'Object Keys:<br />';
-                var html_imgs = '';
-                jQuery.each(data.Contents, function (index, obj) {
-                    html_keys += (index + ': ' + obj.Key + '<br />');
-                    html_imgs += "<img src='" + "https://s3.amazonaws.com/"
-                        + s3BucketName + "/" + obj.Key + "'/><br/>";
-
-                    html_imgs += "<div class='col-lg-4 col-sm-6'>"
-                        + "<a href='" + "https://s3.amazonaws.com/"
-                        + s3BucketName + "/" + obj.Key + "' class='portfolio-box'>"
-                        + "<img src='" + "https://s3.amazonaws.com/"
-                        + s3BucketName + "/" + obj.Key + "' class='img-responsive' alt=''/>"
-                        + "<div class='portfolio-box-caption'>"
-                        + "<div class='portfolio-box-caption-content'>"
-                        + "<div class='project-category text-faded'>"
-                        + "Index"
-                        + "</div>"
-                        + "<div class='project-name'>"
-                        + "</div> "
-                        + "</div> "
-                        + "</div> "
-                        + "</a> "
-                        + "</div>"
-                });
-                jQuery("#load_Image").html(html_imgs);
-            } else { console.log(error); }
-        });
+    function setHeader(xhr) {
+        xhr.setRequestHeader('Authorization', 'bearer ' + accessToken);
     }
 
-    listObjs();
+
+    function loadTalentData() {
+        loadTalentData = jQuery.ajax({
+            method: 'GET',
+            url: 'http://server.anythingabout.me/API/Talents',
+            crossDomain: true,
+            dataType: 'json',
+            cache: false,
+            beforeSend: setHeader,
+        })
+        loadTalentDataHandler.done(function (data, textStatus, jqXHR) {
+
+            console.log(data);
+
+        })
+        loadTalentDataHandler.fail(function (data, textStatus, jqXHR) {
+            toastr.options = {
+                "closeButton": false,
+                "debug": false,
+                "newestOnTop": false,
+                "progressBar": false,
+                "positionClass": "toast-bottom-left",
+                "preventDuplicates": false,
+                "onclick": null,
+                "showDuration": "300",
+                "hideDuration": "1000",
+                "timeOut": "5000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            }
+            toastr["error"]("There was an issue retrieving data from the server.", "Error")
+        })
+    }
 
 </script>

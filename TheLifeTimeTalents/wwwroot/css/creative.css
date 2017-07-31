@@ -4,6 +4,10 @@
  * Licensed under MIT (https://github.com/BlackrockDigital/startbootstrap/blob/gh-pages/LICENSE)
  */
 
+.padding-left{
+    padding-left: 20px;
+}
+
 .body-content {
     margin-top: 90px;
 }

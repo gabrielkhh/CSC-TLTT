@@ -26,17 +26,23 @@
 </div>
 
 <script>
+    var accessToken = sessionStorage.getItem('accessToken');
 
     //loadSubscriptionFeeData();
 
     function loadSubscriptionFeeData() {
+
+
 
         loadSubscriptionFeeData = jQuery.ajax({
             method: 'GET',
             url: 'http://server.anythingabout.me/Account/Register',
             crossDomain: true,
             dataType: 'json',
-            cache: false
+            cache: false,
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader('Authorization', 'bearer ' + accessToken)
+            }
         })
         loadSubscriptionFeeDataHandler.done(function (data, textStatus, jqXHR) {
 
@@ -90,6 +96,9 @@
                 data: webFormDataInString,
                 dataType: 'json',
                 contentType: 'application/json',
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('Authorization', 'bearer ' + accessToken)
+                }
             });
 
             $saveHandler.done(function (data, textStatus, jqXHR) {

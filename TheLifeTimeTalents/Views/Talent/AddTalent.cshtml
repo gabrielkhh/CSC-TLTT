@@ -170,6 +170,8 @@
 
                     console.log(webFormDataInString);
 
+                    var accessToken = sessionStorage.getItem('accessToken');
+
                     $talentHandler = jQuery.ajax({
                         type: 'POST',
                         url: 'http://server.anythingabout.me/Account/Login',
@@ -177,6 +179,9 @@
                         data: webFormDataInString,
                         dataType: 'json',
                         contentType: 'application/json',
+                        beforeSend: function (xhr) {
+                            xhr.setRequestHeader('Authorization', 'bearer ' + accessToken)
+                        }
                     });
 
                     $talentHandler.done(function (data, textStatus, jqXHR) {

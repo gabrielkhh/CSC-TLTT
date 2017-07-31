@@ -1,32 +1,50 @@
-﻿@using Microsoft.AspNetCore.Identity
-@using TheLifeTimeTalents.Models
+﻿<div id="loadNav"></div>
 
-@inject SignInManager<ApplicationUser> SignInManager
-@inject UserManager<ApplicationUser> UserManager
+<script>
+    var accessToken = null;
+    accessToken = sessionStorage.getItem('idToken');
 
-@if (SignInManager.IsSignedIn(User))
-{
-    <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" id="logoutForm" class="navbar-right">
-        <ul class="nav navbar-nav navbar-right padding-right">
-            <li>
-                <a>Hello @UserManager.GetUserName(User)!</a>
-            </li>
-            @*<li>
-                <a class="page-scroll" href="/Talent/AddTalent">Image Upload</a>
-            </li>
-            <li>
-                <a class="page-scroll" href="/Account/Subscription">Subscription</a>
-            </li>*@
-            <li>
-                <button type="submit" class="btn btn-link navbar-btn navbar-link">Log out</button>
-            </li>
-        </ul>
-    </form>
-}
-else
-{
-    <ul class="nav navbar-nav navbar-right">
-        <li><a asp-area="" asp-controller="Account" asp-action="Register">Register</a></li>
-        <li><a asp-area="" asp-controller="Account" asp-action="Login">Log in</a></li>
-    </ul>
-}
+    if (accessToken != null) {
+        $('#loadNav').html("<form asp-area='' asp-controller='Account' asp-action='Logout' method='post' id='logoutForm' class='navbar-right'>"
+            + " <ul class='nav navbar-nav navbar-right padding-right'>"
+            + "<li>"
+            + " <a>Hello!</a>"
+            + " </li>"
+            + "<li>"
+            + "<a class='page-scroll' href='/Talent/ViewTalents'>View Talents</a>"
+            + "</li >"
+
+            + " <li>"
+            + "  <a class='page-scroll' href='/Talent/AddTalent'>Talent Upload</a>"
+            + "</li>"
+            + "<li>"
+            + " <a class='page-scroll' href='/Home/Subscription'>Subscription</a>"
+            + "</li>"
+            + "<li class='dropdown'>"
+            + "<a href='#' id='drop' data-toggle='dropdown' class='dropdown-toggle' role='button'>"
+            + " Admin <b class='caret'></b>"
+            + " </a>"
+            + " <ul class='dropdown-menu' role='menu' aria-labelledby='drop'>"
+            + " <li>"
+            + "  <a class='page-scroll' href='/Admin/ManageSubscription'>Manage Subscription</a>"
+            + " </li>"
+            + " </ul>"
+            + "</li>"
+            + "<li>"
+            + "   <button type='submit' class='btn btn-link navbar-btn navbar-link'>Log out</button>"
+            + "</li>"
+            + "</ul>"
+            + " </form>")
+    }
+    else {
+        $('#loadNav').html("<form class='navbar-right'>"
+            + " <ul class='nav navbar-nav navbar-right padding-right'>"
+            + "<li>"
+            + "<a class='page-scroll' href='/Talent/ViewTalents'>View Talents</a>"
+            + "</li >"
+            + "<li><a asp-area='' href='/Account/Register'>Register</a></li >"
+            + "<li><a asp-area='' href='/Account/Login'>Log in</a></li>"
+            + "</ul>"
+            + "</form>")
+    }
+</script>

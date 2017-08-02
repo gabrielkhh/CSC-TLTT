@@ -172,17 +172,17 @@
 
                     console.log(webFormDataInString);
 
-                    var accessToken = sessionStorage.getItem('accessToken');
+                    var idToken = sessionStorage.getItem('idToken');
 
                     $talentHandler = jQuery.ajax({
                         type: 'POST',
-                        url: 'http://server.anythingabout.me/Account/Login',
+                        url: 'http://server.anythingabout.me/API/Talents/CreateTalent',
                         crossDomain: true,
                         data: webFormDataInString,
                         dataType: 'json',
                         contentType: 'application/json',
                         beforeSend: function (xhr) {
-                            xhr.setRequestHeader('Authorization', 'bearer ' + accessToken)
+                            xhr.setRequestHeader('Authorization', 'bearer ' + idToken)
                         }
                     });
 

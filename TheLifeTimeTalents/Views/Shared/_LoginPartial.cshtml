@@ -18,7 +18,7 @@
                 dataType: 'json',
                 cache: false,
                 beforeSend: function (xhr) {
-                    xhr.setRequestHeader('Authorization', 'bearer ' + idToken)
+                    xhr.setRequestHeader('Authorization', 'bearer ' + idToken1)
                 }
             })
             loadDisplayNameDataHandler.done(function (data, textStatus, jqXHR) {

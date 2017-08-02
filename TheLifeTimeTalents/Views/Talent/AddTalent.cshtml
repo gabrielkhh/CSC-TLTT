@@ -13,7 +13,7 @@
         <div class="form-group">
             <label class="col-md-2 control-label">Talent Name</label>
             <div class="col-md-10">
-                <input type="text" id="txtTalentName" name="txtTalentName" class="form-control"/>
+                <input type="text" id="txtTalentName" name="txtTalentName" class="form-control" />
             </div>
         </div>
 
@@ -22,7 +22,7 @@
         <div class="form-group">
             <label class="col-md-2 control-label">Short Name</label>
             <div class="col-md-10">
-                <input type="text" id="txtShortName" name="txtShortName" class="form-control"/>
+                <input type="text" id="txtShortName" name="txtShortName" class="form-control" />
             </div>
         </div>
 
@@ -31,7 +31,7 @@
         <div class="form-group">
             <label class="col-md-2 control-label">Reknown</label>
             <div class="col-md-10">
-                <input type="text" id="txtReknown" name="txtReknown" class="form-control"/>
+                <input type="text" id="txtReknown" name="txtReknown" class="form-control" />
             </div>
         </div>
 
@@ -58,9 +58,9 @@
         <div class="form-group">
             <label class="col-md-2 control-label">Image</label>
             <div class="col-md-10">
-                <input type="file" name="file" id="file" value="dataFile" input-group-lg" required/>
+                <input type="file" name="file" id="file" value="dataFile" input-group-lg" />
             </div>
-        </div>     
+        </div>
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10 padding-top padding-bottom">
                 <button id="uploadFile" type="submit" class="btn btn-default">Upload</button>
@@ -116,9 +116,6 @@
                 txtBio: {
                     required: true,
                 },
-                file: {
-                    required: true,
-                },
             },
             messages: {
                 txtTalentName: {
@@ -133,9 +130,6 @@
                 txtBio: {
                     required: "Please enter your bio",
                 },
-                file: {
-                    required: "Please select a file",
-                },
             },
             onkeyup: false, //turn off auto validate whilst typing
             submitHandler: function (form) {
@@ -149,69 +143,66 @@
                     this.ImageUrl = inImageUrl;
                 }
 
-                $('#uploadFile').click(function () {
+                //NO FRONT END VALIDATION YET
+                collectedTxtTalentName = $('#txtTalentName').val();
+                collectedTxtShortName = $('#txtShortName').val();
+                collectedTxtReknown = $('#txtReknown').val();
+                collectedTxtBio = $('#txtBio').val();
+                imageUrl = "www.fakeimage.com"
 
-                    //NO FRONT END VALIDATION YET
-                    collectedTxtTalentName = $('#txtTalentName').val();
-                    collectedTxtShortName = $('#txtShortName').val();
-                    collectedTxtReknown = $('#txtReknown').val();
-                    collectedTxtBio = $('#txtBio').val();
-                    imageUrl = "www.fakeimage.com"
+                if ($("#privacy").is(':checked')) {
+                    isPrivate = true;
+                }
+                else {
+                    isPrivate = false;
+                }
 
-                    if ($("#privacy").is(':checked')) {
-                        isPrivate = true;
+                var webFormData = new WebFormData(collectedTxtTalentName,
+                    collectedTxtShortName, collectedTxtReknown, collectedTxtBio, isPrivate, imageUrl);
+
+                var webFormDataInString = JSON.stringify(webFormData);
+
+                console.log(webFormDataInString);
+
+                var idToken = sessionStorage.getItem('idToken');
+
+                $talentHandler = jQuery.ajax({
+                    type: 'POST',
+                    url: 'http://server.anythingabout.me/API/Talents/CreateTalent',
+                    crossDomain: true,
+                    data: webFormDataInString,
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader('Authorization', 'bearer ' + idToken)
                     }
-                    else {
-                        isPrivate = false;
+                });
+
+                $talentHandler.done(function (data, textStatus, jqXHR) {
+                    console.log("Success");
+                    window.location.replace("/Home/Index");
+                });
+
+                $talentHandler.fail(function (data, textStatus, jqXHR) {
+                    toastr.options = {
+                        "closeButton": false,
+                        "debug": false,
+                        "newestOnTop": false,
+                        "progressBar": false,
+                        "positionClass": "toast-bottom-left",
+                        "preventDuplicates": false,
+                        "onclick": null,
+                        "showDuration": "300",
+                        "hideDuration": "1000",
+                        "timeOut": "5000",
+                        "extendedTimeOut": "1000",
+                        "showEasing": "swing",
+                        "hideEasing": "linear",
+                        "showMethod": "fadeIn",
+                        "hideMethod": "fadeOut"
                     }
 
-                    var webFormData = new WebFormData(collectedTxtTalentName,
-                        collectedTxtShortName, collectedTxtReknown, collectedTxtBio, isPrivate, imageUrl);
-
-                    var webFormDataInString = JSON.stringify(webFormData);
-
-                    console.log(webFormDataInString);
-
-                    var idToken = sessionStorage.getItem('idToken');
-
-                    $talentHandler = jQuery.ajax({
-                        type: 'POST',
-                        url: 'http://server.anythingabout.me/API/Talents/CreateTalent',
-                        crossDomain: true,
-                        data: webFormDataInString,
-                        dataType: 'json',
-                        contentType: 'application/json',
-                        beforeSend: function (xhr) {
-                            xhr.setRequestHeader('Authorization', 'bearer ' + idToken)
-                        }
-                    });
-
-                    $talentHandler.done(function (data, textStatus, jqXHR) {
-                        console.log("Success");
-                        window.location.replace("/Home/Index");
-                    });
-
-                    $talentHandler.fail(function (data, textStatus, jqXHR) {
-                        toastr.options = {
-                            "closeButton": false,
-                            "debug": false,
-                            "newestOnTop": false,
-                            "progressBar": false,
-                            "positionClass": "toast-bottom-left",
-                            "preventDuplicates": false,
-                            "onclick": null,
-                            "showDuration": "300",
-                            "hideDuration": "1000",
-                            "timeOut": "5000",
-                            "extendedTimeOut": "1000",
-                            "showEasing": "swing",
-                            "hideEasing": "linear",
-                            "showMethod": "fadeIn",
-                            "hideMethod": "fadeOut"
-                        }
-
-                        toastr["error"](jqXHR, "Error")
-                    });
+                    toastr["error"](jqXHR, "Error")
                 });
             }
         });

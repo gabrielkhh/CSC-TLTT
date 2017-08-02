@@ -140,12 +140,13 @@
             onkeyup: false, //turn off auto validate whilst typing
             submitHandler: function (form) {
 
-                function WebFormData(inTalentName, inShortName, inReknown, inBio, inIsPrivate) {
+                function WebFormData(inTalentName, inShortName, inReknown, inBio, inIsPrivate, inImageUrl) {
                     this.TalentName = inTalentName;
                     this.ShortName = inShortName;
                     this.Reknown = inReknown;
                     this.Bio = inBio;
                     this.IsPrivate = inIsPrivate;
+                    this.ImageUrl = inImageUrl;
                 }
 
                 $('#uploadFile').click(function () {
@@ -155,6 +156,7 @@
                     collectedTxtShortName = $('#txtShortName').val();
                     collectedTxtReknown = $('#txtReknown').val();
                     collectedTxtBio = $('#txtBio').val();
+                    imageUrl = "www.fakeimage.com"
 
                     if ($("#privacy").is(':checked')) {
                         isPrivate = true;
@@ -164,7 +166,7 @@
                     }
 
                     var webFormData = new WebFormData(collectedTxtTalentName,
-                        collectedTxtShortName, collectedTxtReknown, collectedTxtBio, isPrivate);
+                        collectedTxtShortName, collectedTxtReknown, collectedTxtBio, isPrivate, imageUrl);
 
                     var webFormDataInString = JSON.stringify(webFormData);
 

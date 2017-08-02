@@ -1,14 +1,59 @@
 ﻿<div id="loadNav"></div>
 
 <script>
-    var accessToken = null;
-    accessToken = sessionStorage.getItem('idToken');
+    var idToken = null;
+    var displayName = "";
+    idToken = sessionStorage.getItem('idToken');
 
-    if (accessToken != null) {
+    if (idToken != null) {
+
+        loadDisplayNameData();
+
+        function loadDisplayNameData() {
+
+            loadDisplayNameDataHandler = jQuery.ajax({
+                method: 'GET',
+                url: 'http://server.anythingabout.me/Account/GetUserDisplayName/',
+                crossDomain: true,
+                dataType: 'json',
+                cache: false,
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('Authorization', 'bearer ' + idToken)
+                }
+            })
+            loadDisplayNameDataHandler.done(function (data, textStatus, jqXHR) {
+
+                console.log(data);
+
+                displayName = data.displayName;
+
+            })
+            loadDisplayNameDataHandler.fail(function (data, textStatus, jqXHR) {
+                toastr.options = {
+                    "closeButton": false,
+                    "debug": false,
+                    "newestOnTop": false,
+                    "progressBar": false,
+                    "positionClass": "toast-bottom-left",
+                    "preventDuplicates": false,
+                    "onclick": null,
+                    "showDuration": "300",
+                    "hideDuration": "1000",
+                    "timeOut": "5000",
+                    "extendedTimeOut": "1000",
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
+                }
+                toastr["error"]("There was an issue retrieving data from the server.", "Error")
+            })
+        }
+
         $('#loadNav').html("<form asp-area='' asp-controller='Account' asp-action='Logout' method='post' id='logoutForm' class='navbar-right'>"
             + " <ul class='nav navbar-nav navbar-right padding-right'>"
             + "<li>"
-            + " <a>Hello!</a>"
+            + " <a>Hello " + displayName + "!</a>"
             + " </li>"
             + "<li>"
             + "<a class='page-scroll' href='/Talent/ViewTalents'>View Talents</a>"

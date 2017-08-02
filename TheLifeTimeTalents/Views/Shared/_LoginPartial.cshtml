@@ -1,11 +1,11 @@
 ﻿<div id="loadNav"></div>
 
 <script>
-    var idToken1 = null;
+    var id_token = null;
     var displayName = "";
-    idToken1 = sessionStorage.getItem('idToken');
+    id_token = sessionStorage.getItem('idToken');
 
-    if (idToken1 != null) {
+    if (id_token != null) {
 
         loadDisplayNameData();
 
@@ -18,7 +18,7 @@
                 dataType: 'json',
                 cache: false,
                 beforeSend: function (xhr) {
-                    xhr.setRequestHeader('Authorization', 'bearer ' + idToken1)
+                    xhr.setRequestHeader('Authorization', 'bearer ' + id_token)
                 }
             })
             loadDisplayNameDataHandler.done(function (data, textStatus, jqXHR) {
@@ -37,7 +37,7 @@
                     + "</li >"
 
                     + " <li>"
-                    + "  <a class='page-scroll' href='/Talent/AddTalent'>Talent Upload</a>"
+                    + "  <a class='page-scroll' href='/Talent/AddTalent'>Add Talent</a>"
                     + "</li>"
                     + "<li>"
                     + " <a class='page-scroll' href='/Home/Subscription'>Subscription</a>"
@@ -95,7 +95,7 @@
 
     function logout() {
         event.preventDefault();
-        window.location.replace("/Home/Index");
         sessionStorage.clear();
+        window.location.replace("/Home/Index");
     }
 </script>

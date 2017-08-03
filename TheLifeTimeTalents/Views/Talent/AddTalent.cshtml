@@ -58,7 +58,7 @@
         <div class="form-group">
             <label class="col-md-2 control-label">Image</label>
             <div class="col-md-10">
-                <input type="file" name="file" id="file" value="dataFile" input-group-lg" />
+                <input type="file" name="file" id="file" value="dataFile" input-group-lg" required/>
             </div>
         </div>
         <div class="form-group">
@@ -71,33 +71,19 @@
 <script>
 
     $("[name='privacy']").bootstrapSwitch();
+
     var isPrivate = false;
 
     window.$PhotoInputElement = $('#file');
 
     window.$PhotoInputElement.fileinput({
-        uploadUrl: '/API/Image/UploadImage',
-        uploadAsync: false,
         maxFileCount: 1,
-        type: 'post',
         overwriteInitial: false,
         showUpload: false,
         showRemove: false,
         browseClass: 'btn btn-primary btn-md pull-right',
         previewFileIcon: '<i class="glyphicon glyphicon-king"></i>',
         allowedFileExtensions: ['jpg', 'jpeg', 'png'],
-        uploadExtraData: function () {
-            var out = {};
-            return out;
-        }
-    });
-    window.$PhotoInputElement.on('filebatchuploadcomplete', function (event, data, previewId, index) {
-        var form = data.form, files = data.files, extra = data.extra,
-            response = data.response, reader = data.reader;
-        console.log(response);
-        console.log(event);
-        console.dir(data);
-        $('body').fadeOut(2000, '/Home/Index');
     });
 
     $(document).ready(function () {
@@ -116,6 +102,9 @@
                 txtBio: {
                     required: true,
                 },
+                file: {
+                    required: true,
+                },
             },
             messages: {
                 txtTalentName: {
@@ -129,6 +118,9 @@
                 },
                 txtBio: {
                     required: "Please enter your bio",
+                },
+                file: {
+                    required: "Please select a file",
                 },
             },
             onkeyup: false, //turn off auto validate whilst typing
@@ -149,6 +141,12 @@
                 collectedTxtReknown = $('#txtReknown').val();
                 collectedTxtBio = $('#txtBio').val();
                 imageUrl = "www.fakeimage.com"
+
+                var file = $('#file').get(0).files.item(0);
+
+
+                console.log(file);
+
 
                 if ($("#privacy").is(':checked')) {
                     isPrivate = true;
@@ -217,62 +215,4 @@
         });
 
     });
-
 </script>
-
-@*<script>
-        AWS.config.update({
-            accessKeyId: 'AKIAIVXFDITHKGUQUDIQ',
-            secretAccessKey: 'xUA5X/BVqEwTQtzAsXctCrf1WqGP4EJjHKKq7vo'
-        });
-        AWS.config.region = 'us-east-1';
-
-        function uploadFile() {
-
-            var s3 = new AWS.S3({
-                params: { Bucket: 'csc1718s1' }
-            });
-            var file = document.getElementById('file').files[0];
-            if (file) {
-                s3.putObject({
-                    Key: file.name,
-                    ContentType: file.type,
-                    Body: file,
-                    ACL: "public-read"
-                },
-                    function (err, data) {
-                        if (data !== null) {
-                            alert("Got it!");
-                        }
-                        else {
-                            alert("Upload failed!");
-                        }
-                    });
-            }
-        }
-
-    </script>*@
-
-
-@*<script type="text/javascript">
-        var s3BucketName = 'csc1718s1';
-
-        function listObjs() {
-            var s3 = new AWS.S3({
-                params: { Bucket: s3BucketName }
-            });
-            s3.listObjects(function (error, data) {
-                if (error === null) {
-                    var html_keys = 'Object Keys:<br />';
-                    var html_imgs = '';
-                    jQuery.each(data.Contents, function (index, obj) {
-                        html_keys += (index + ': ' + obj.Key + '<br />');
-                        html_imgs += "<img src='" + "https://s3.amazonaws.com/"
-                            + s3BucketName + "/" + obj.Key + "'/><br/>";
-                    });
-                    jQuery("#objKeys").html(html_keys);
-                    jQuery("#objImgs").html(html_imgs);
-                } else { console.log(error); }
-            });
-        }
-    </script>*@

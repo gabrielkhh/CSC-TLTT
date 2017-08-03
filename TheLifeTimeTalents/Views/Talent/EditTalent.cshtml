@@ -56,23 +56,107 @@
         <br /><br /><br />
 
         <div class="form-group">
+            <div class="col-md-2 control-label"></div>
+            <div class="col-md-10">
+                <img id="currentImage" class="thumbnail padding-bottom" />
+            </div>
+        </div>
+
+        <br /><br /><br />
+
+        <div class="form-group">
             <label class="col-md-2 control-label">Image</label>
             <div class="col-md-10">
-                <input type="file" name="file" id="file" value="dataFile" input-group-lg" required/>
+                <input type="file" name="file" id="file" value="dataFile" input-group-lg" required />
             </div>
         </div>
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10 padding-top padding-bottom">
-                <button id="uploadFile" type="submit" class="btn btn-default">Upload</button>
+                <button id="uploadFile" type="submit" class="btn btn-default">Update</button>
             </div>
         </div>
     </form>
 </div>
 <script>
 
-    $("[name='privacy']").bootstrapSwitch();
+
 
     var isPrivate = false;
+
+    var talentList = "";
+    var talentName = "";
+    var shortName = "";
+    var reknown = ""
+    var bio = "";
+    var isPrivate = "";
+    var imageUrl = "";
+    var html_imgs = '';
+
+    loadTalentData();
+
+    function loadTalentData() {
+
+        var idToken = sessionStorage.getItem('idToken');
+
+        loadTalentDataHandler = jQuery.ajax({
+            method: 'GET',
+            url: 'http://server.anythingabout.me/API/Talents/GetTalent',
+            crossDomain: true,
+            dataType: 'json',
+            cache: false,
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader('Authorization', 'bearer ' + idToken)
+            }
+        })
+        loadTalentDataHandler.done(function (data, textStatus, jqXHR) {
+
+            console.log(data);
+            talentList = data;
+
+
+            talentName = talentList.talentName;
+            shortName = talentList.shortName;
+            reknown = talentList.reknown;
+            bio = talentList.bio;
+            isPrivate = talentList.isPrivate;
+            imageUrl = talentList.imageUrl;
+
+            $('#txtTalentName').val(talentName);
+            $('#txtShortName').val(shortName);
+            $('#txtReknown').val(reknown);
+            $('#txtBio').val(bio);
+
+            if (isPrivate == true) {
+                $("[name='privacy']").bootstrapSwitch('state', true);
+            }
+            else {
+                $("[name='privacy']").bootstrapSwitch('state', false);
+            }
+
+            $('#currentImage').attr('src', imageUrl);
+
+        })
+        loadTalentDataHandler.fail(function (data, textStatus, jqXHR) {
+            toastr.options = {
+                "closeButton": false,
+                "debug": false,
+                "newestOnTop": false,
+                "progressBar": false,
+                "positionClass": "toast-bottom-left",
+                "preventDuplicates": false,
+                "onclick": null,
+                "showDuration": "300",
+                "hideDuration": "1000",
+                "timeOut": "5000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            }
+            toastr["error"]("There was an issue retrieving data from the server.", "Error")
+        })
+    }
 
     window.$PhotoInputElement = $('#file');
 

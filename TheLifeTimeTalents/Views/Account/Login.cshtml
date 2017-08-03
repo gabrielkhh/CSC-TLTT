@@ -65,6 +65,8 @@
             onkeyup: false, //turn off auto validate whilst typing
             submitHandler: function (form) {
 
+                $("#btnLogin").disabled = true;
+
                 event.preventDefault();
 
                 function WebFormData(inEmail, inPassword) {
@@ -79,8 +81,6 @@
                     collectedTxtPassword);
 
                 var webFormDataInString = JSON.stringify(webFormData);
-
-                console.log(webFormDataInString);
 
                 $loginHandler = jQuery.ajax({
                     type: 'POST',

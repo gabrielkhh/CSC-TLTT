@@ -58,7 +58,7 @@
         <div class="form-group">
             <label class="col-md-2 control-label">Image</label>
             <div class="col-md-10">
-                <input type="file" name="file" id="file" value="dataFile" input-group-lg" required/>
+                <input type="file" name="file" id="file" value="dataFile" input-group-lg" required />
             </div>
         </div>
         <div class="form-group">
@@ -124,7 +124,10 @@
                 },
             },
             onkeyup: false, //turn off auto validate whilst typing
+
             submitHandler: function (form) {
+
+                $("#uploadFile").disabled = true;
 
                 function WebFormData(inTalentName, inShortName, inReknown, inBio, inIsPrivate, inImageUrl) {
                     this.TalentName = inTalentName;

@@ -94,6 +94,8 @@
             onkeyup: false, //turn off auto validate whilst typing
             submitHandler: function (form) {
 
+                $("#btnRegister").disabled = true;
+
                 event.preventDefault();
 
                 function WebFormData(inName, inUserName, inEmail, inPassword, inConfirmPassord, inCaptchaResponse) {
@@ -116,8 +118,6 @@
                     collectedTxtPassword, collectedTxtConfirmPassword, collectedCaptchaResponse);
 
                 var webFormDataInString = JSON.stringify(webFormData);
-
-                console.log(webFormDataInString);
 
                 $registerHandler = jQuery.ajax({
                     type: 'POST',

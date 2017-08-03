@@ -167,8 +167,8 @@
                 var idToken = sessionStorage.getItem('idToken');
 
                 $talentHandler = jQuery.ajax({
-                    type: 'POST',
-                    url: 'http://server.anythingabout.me/API/Talents/CreateTalent',
+                    type: 'PUT',
+                    url: 'http://server.anythingabout.me/API/Talents/UpdateTalent',
                     crossDomain: true,
                     data: webFormDataInString,
                     dataType: 'json',
@@ -179,8 +179,17 @@
                 });
 
                 $talentHandler.done(function (data, textStatus, jqXHR) {
-                    console.log("Success");
-                    window.location.replace("/Home/Index");
+
+                    swal({
+                        title: "Successful!",
+                        text: "Talent Added!",
+                        type: "success"
+                    },
+                        function () {
+                            ignore = true;
+                            window.location.replace("/Home/Index");
+                        });
+
                 });
 
                 $talentHandler.fail(function (data, textStatus, jqXHR) {

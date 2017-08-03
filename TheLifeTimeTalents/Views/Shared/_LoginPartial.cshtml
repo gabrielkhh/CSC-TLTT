@@ -23,8 +23,6 @@
             })
             loadDisplayNameDataHandler.done(function (data, textStatus, jqXHR) {
 
-                console.log(data);
-
                 displayName = data.displayName;
 
                 $('#loadNav').html("<form class='navbar-right'>"
@@ -35,12 +33,21 @@
                     + "<li>"
                     + "<a class='page-scroll' href='/Talent/ViewTalents'>View Talents</a>"
                     + "</li >"
-
                     + " <li>"
                     + "  <a class='page-scroll' href='/Talent/AddTalent'>Add Talent</a>"
                     + "</li>"
+                    + "<li class='dropdown'>"
+                    + "<a href='#' id='drop' data-toggle='dropdown' class='dropdown-toggle' role='button'>"
+                    + " Account <b class='caret'></b>"
+                    + " </a>"
+                    + " <ul class='dropdown-menu' role='menu' aria-labelledby='drop'>"
+                    + "<li>"
+                    + " <a class='page-scroll' href='/Home/Profile'>Profile</a>"
+                    + "</li>"
                     + "<li>"
                     + " <a class='page-scroll' href='/Home/Subscription'>Subscription</a>"
+                    + "</li>"
+                    + " </ul>"
                     + "</li>"
                     + "<li class='dropdown'>"
                     + "<a href='#' id='drop' data-toggle='dropdown' class='dropdown-toggle' role='button'>"

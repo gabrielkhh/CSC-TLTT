@@ -4,6 +4,30 @@
  * Licensed under MIT (https://github.com/BlackrockDigital/startbootstrap/blob/gh-pages/LICENSE)
  */
 
+.outcome {
+    float: left;
+    width: 100%;
+    padding-top: 8px;
+    min-height: 24px;
+}
+
+.success, .error1 {
+    display: none;
+    font-size: 13px;
+}
+
+    .success.visible, .error1.visible {
+        display: inline;
+    }
+
+.error1 {
+    color: #E4584C;
+}
+
+.success {
+    color: #555555;
+}
+
 .padding-left{
     padding-left: 20px;
 }

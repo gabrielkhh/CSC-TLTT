@@ -1,27 +1,182 @@
-﻿
+﻿<script src="https://js.stripe.com/v3/"></script>
+
 @{
     ViewData["Title"] = "Subscription";
 }
 
 <div class="container body-content">
     <h2>@ViewData["Title"].</h2>
+    <div class="row">
+        <div class="col-md-6 pull-left">
+            <form id="myForm" class="form-horizontal smaller-width">
+                <h4>Searching services.</h4>
+                <hr />
+                <p>Simply pay a one-time subsciption fee of S$10 and start enjoying the Search function! </p>
+                <p>Total Amount: S$10</p>
+                <br />
+                <div class="form-group">
+                    <label class="col-md-2 control-label">Name</label>
+                    <div class="col-md-10">
+                        <input name="cardholdername" id="cardholder-name" class="form-control" placeholder="Jane Doe" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">Email</label>
+                    <div class="col-md-10">
+                        <input name="cardholderemail" id="cardholder-email" class="form-control" placeholder="Jane@talents.com" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">Card</label>
+                    <div class="col-md-10">
+                        <div id="card-element" class="form-control"></div>
+                    </div>
+                </div>
 
-    <h4>Searching services.</h4>
-    <hr />
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <div class="outcome">
+                            <div class="error1" role="alert"></div>
+                        </div>
+                    </div>
+                </div>
 
-    <p>Simply pay a one-time subsciption fee of S$10 and start enjoying the Search function! </p>
-    <p>Total Amount: S$10</p>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <button id="btnPay" type="submit" class="btn btn-default">Pay $10</button>
+                    </div>
+                </div>
 
-    <form action="http://server.anythingabout.me" method="POST">
-        <script src="//checkout.stripe.com/v2/checkout.js"
-                class="stripe-button"
-                data-key="pk_live_cF98jjTrDp9t9BHl5BJHba8v"
-                data-locale="auto"
-                data-name="The Life Time Talents"
-                data-description="S$10"
-                data-amount="1000"
-                data-currency="sgd">
-        </script>
-    </form>
-
+            </form>
+        </div>
+    </div>
 </div>
+
+<script>
+    var stripe = Stripe('pk_live_cF98jjTrDp9t9BHl5BJHba8v');
+    var elements = stripe.elements();
+
+    var card = elements.create('card', {
+        hidePostalCode: true,
+        style: {
+            base: {
+                '::placeholder': {
+                    color: '#999999',
+                },
+            },
+        }
+    });
+    card.mount('#card-element');
+
+    function setOutcome(result) {
+        var errorElement = document.querySelector('.error1');
+        errorElement.classList.remove('visible');
+
+        if (result.token) {
+
+            function WebFormData(inName, inEmail, inTokenId) {
+                this.Name = inName;
+                this.Email = inEmail;
+                this.TokenId = inTokenId;
+            }
+
+            collectedName = result.token.card.name;
+            collectedEmail = result.token.email;
+            collectedTokenId = result.token.id;
+
+            var webFormData = new WebFormData(collectedName,
+                collectedEmail, collectedTokenId);
+
+            var webFormDataInString = JSON.stringify(webFormData);
+
+            console.log(webFormDataInString);
+
+            $paymentHandler = jQuery.ajax({
+                type: 'POST',
+                url: 'http://server.anythingabout.me/API/Subcription/Payment',
+                crossDomain: true,
+                data: webFormDataInString,
+                dataType: 'json',
+                contentType: 'application/json',
+            });
+
+            $paymentHandler.done(function (data, textStatus, jqXHR) {
+                swal({
+                    title: "Successful!",
+                    text: "Payment Made!",
+                    type: "success"
+                },
+                    function () {
+                        ignore = true;
+                        window.location.replace("/Home/Subscription");
+                    });
+            });
+
+            $paymentHandler.fail(function (data, textStatus, jqXHR) {
+                toastr.options = {
+                    "closeButton": false,
+                    "debug": false,
+                    "newestOnTop": false,
+                    "progressBar": false,
+                    "positionClass": "toast-bottom-left",
+                    "preventDuplicates": false,
+                    "onclick": null,
+                    "showDuration": "300",
+                    "hideDuration": "1000",
+                    "timeOut": "5000",
+                    "extendedTimeOut": "1000",
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
+                }
+                toastr["error"](jqXHR, "Error")
+            });
+
+        } else if (result.error) {
+            errorElement.textContent = result.error.message;
+            errorElement.classList.add('visible');
+        }
+    }
+
+    card.on('change', function (event) {
+        setOutcome(event);
+    });
+
+
+
+    $(document).ready(function () {
+
+        $("#myForm").validate({
+            rules: {
+                cardholdername: {
+                    required: true,
+                },
+                cardholderemail: {
+                    required: true,
+                },
+            },
+            messages: {
+                cardholdername: {
+                    required: "Please enter your name",
+                },
+                cardholderemail: {
+                    required: "Please enter your email",
+                },
+            },
+            onkeyup: false, //turn off auto validate whilst typing
+            submitHandler: function (form) {
+
+                event.preventDefault();
+                var form = document.querySelector('form');
+                var extraDetails = {
+                    name: $('#cardholder-name').val(),
+                    email: $('#cardholder-email').val(),
+                };
+                stripe.createToken(card, extraDetails).then(setOutcome);
+
+            }
+        });
+
+    });
+</script>

@@ -1,1 +1,133 @@
-﻿
+﻿<script src="https://sdk.amazonaws.com/js/aws-sdk-2.0.0-rc1.min.js"></script>
+@{
+    ViewData["Title"] = "Manage Talents";
+}
+<div class="container body-content">
+    <h2>@ViewData["Title"].</h2>
+
+
+    <h4>View and edit any talent.</h4>
+    <hr />
+
+
+
+    <div class="panel panel-primary">
+        <div class="panel-heading clearfix">
+            <div class="panel-title">
+                <div class="btn-group pull-right">
+                    <a asp-action="CreateBrand" asp-controller="Brands" class="btn btn-default btn-group-lg ">Add</a>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="table table-hover sortable">
+                        <thead>
+                            <tr>
+                                <th>Photo</th>
+                                <th>Talent Name</th>
+                                <th>Short Name</th>
+                                <th>Reknown</th>
+                                <th>&nbsp;</th>
+                            </tr>
+                        </thead>
+                        <tbody id="TalentTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+<script type="text/javascript">
+
+    var talentList = "";
+    var talentName = "";
+    var shortName = "";
+    var reknown = ""
+    var bio = "";
+    var isPrivate = "";
+    var imageUrl = "";
+    var $tableElement = null;
+    var $cellElement = null;
+    var $rowElement = null;
+
+    $tableBodyElement = $('#TalentTableBody');
+
+    loadTalentData();
+
+    function loadTalentData() {
+
+        var idToken = sessionStorage.getItem('idToken');
+
+        loadTalentDataHandler = jQuery.ajax({
+            method: 'GET',
+            url: 'http://server.anythingabout.me/API/Talents/GetAllTalents',
+            crossDomain: true,
+            dataType: 'json',
+            cache: false,
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader('Authorization', 'bearer ' + idToken)
+            }
+        })
+        loadTalentDataHandler.done(function (data, textStatus, jqXHR) {
+
+            console.log(data);
+            talentList = data;
+
+            for (i = 0; i < talentList.length; i++) {
+                talent = talentList[i];
+                talentName = talent.talentName;
+                shortName = talent.shortName;
+                reknown = talent.reknown;
+                bio = talent.bio;
+                isPrivate = talent.isPrivate;
+                imageUrl = talent.imageUrl;
+
+                $rowElement = $('<ul></ul>');
+
+                var $photoImageElement = $('<img>').attr('src', imageUrl);
+                $rowElement = $('<tr></tr>');
+
+                $cellElement = $photoImageElement;
+                $rowElement.append($cellElement);
+
+                $cellElement = $('<td></td>', { text: talentName });
+                $rowElement.append($cellElement);
+
+                $cellElement = $('<td></td>', { text: shortName });
+                $rowElement.append($cellElement);
+
+                $tableBodyElement.append($rowElement);
+
+            }
+
+        })
+        loadTalentDataHandler.fail(function (data, textStatus, jqXHR) {
+            toastr.options = {
+                "closeButton": false,
+                "debug": false,
+                "newestOnTop": false,
+                "progressBar": false,
+                "positionClass": "toast-bottom-left",
+                "preventDuplicates": false,
+                "onclick": null,
+                "showDuration": "300",
+                "hideDuration": "1000",
+                "timeOut": "5000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            }
+            toastr["error"]("There was an issue retrieving data from the server.", "Error")
+        })
+    }
+</script>

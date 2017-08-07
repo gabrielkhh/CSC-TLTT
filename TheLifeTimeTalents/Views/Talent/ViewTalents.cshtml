@@ -5,9 +5,9 @@
 
     <div class="toCenter search">
         <div class="">
-            <input type="text" class="form-control input-sm search-input" placeholder="Type here..." />
+            <input type="text" id="inputSearch" class="form-control input-sm search-input" placeholder="Type here..." />
         </div>
-        <button type="submit" class="btn btn-default">Search</button>
+        <button type="submit" id="btnSearch" class="btn btn-default">Search</button>
     </div>
 
 
@@ -59,19 +59,19 @@
                 imageUrl = talent.imageUrl;
 
                 if (imageUrl != null) {
-                    html_imgs = "<div class='col-lg-4 col-sm-6'>"
+                    html_imgs = "<div class='col-lg-4 col-sm-6 forSearch'>"
                         + "<a href='" + imageUrl + "'class='portfolio-box'>"
                         + "<img src='" + imageUrl + "' class='img-responsive' alt=''/>"
                         + "<div class='portfolio-box-caption'>"
                         + "<div class='portfolio-box-caption-content'>"
-                        + "<div class='project-name'>Talent Name"
+                        + "<div class='project-name'>" + talentName + ""
                         + "</div> "
                         + "<div class='project-category text-faded'>"
-                        + "<text>Short Name</text>"
+                        + "<text>Short Name: " + shortName + "</text>"
                         + "<br/>"
-                        + "<text>Reknown</text>"
+                        + "<text>Reknown: " + reknown + "</text>"
                         + "<br/>"
-                        + "<text>Bio</text>"
+                        + "<text>Bio: " + bio + "</text>"
                         + "</div>"
                         + "</div> "
                         + "</div> "
@@ -80,6 +80,17 @@
 
                     $("#load_Image").append(html_imgs);
                 }
+
+                $('#btnSearch').click(function () {
+                    $('.forSearch').hide();
+                    var txt = $('#inputSearch').val();
+                    $('.forSearch').each(function () {
+                        if ($(this).text().toUpperCase().indexOf(txt.toUpperCase()) != -1) {
+                            $(this).show();
+                        }
+                    });
+                });
+
             }
 
         })

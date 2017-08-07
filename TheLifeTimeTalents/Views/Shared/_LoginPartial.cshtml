@@ -115,8 +115,49 @@
     }
 
     function logout() {
+
         event.preventDefault();
-        sessionStorage.clear();
-        window.location.replace("/Home/Index");
+
+        getLogout();
+
+        function getLogout() {
+
+            getLogoutHandler = jQuery.ajax({
+                method: 'GET',
+                url: 'http://server.anythingabout.me/Account/Logout',
+                crossDomain: true,
+                dataType: 'json',
+                cache: false,
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('Authorization', 'bearer ' + id_token)
+                }
+            })
+            getLogoutHandler.done(function (data, textStatus, jqXHR) {
+
+                sessionStorage.clear();
+                window.location.replace("/Home/Index");
+
+            })
+            getLogoutHandler.fail(function (data, textStatus, jqXHR) {
+                toastr.options = {
+                    "closeButton": false,
+                    "debug": false,
+                    "newestOnTop": false,
+                    "progressBar": false,
+                    "positionClass": "toast-bottom-left",
+                    "preventDuplicates": false,
+                    "onclick": null,
+                    "showDuration": "300",
+                    "hideDuration": "1000",
+                    "timeOut": "5000",
+                    "extendedTimeOut": "1000",
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
+                }
+                toastr["error"]("There was an issue retrieving data from the server.", "Error")
+            })
+        }
     }
 </script>

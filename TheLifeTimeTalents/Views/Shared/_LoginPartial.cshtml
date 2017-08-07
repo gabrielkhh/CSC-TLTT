@@ -3,6 +3,8 @@
 <script>
     var id_token = null;
     var displayName = "";
+    var roleName = "";
+    var hasTalent = "";
     id_token = sessionStorage.getItem('idToken');
 
     if (id_token != null) {
@@ -26,45 +28,67 @@
                 console.log(data);
 
                 displayName = data.displayName;
-                roleName = data.roleName
+                roleName = data.roleName;
+                hasTalent = data.hasTalent;
 
                 if (roleName === "Standard") {
-                    $('#loadNav').html("<form class='navbar-right'>"
-                        + " <ul class='nav navbar-nav navbar-right padding-right'>"
-                        + "<li>"
-                        + " <a>Hello " + displayName + "!</a>"
-                        + " </li>"
-                        + "<li class='dropdown'>"
-                        + "<a href='#' id='drop' data-toggle='dropdown' class='dropdown-toggle' role='button'>"
-                        + " Talent <b class='caret'></b>"
-                        + " </a>"
-                        + " <ul class='dropdown-menu' role='menu' aria-labelledby='drop'>"
-                        + " <li>"
-                        + "  <a class='page-scroll' href='/Talent/AddTalent'>Add Talent</a>"
-                        + "</li>"
-                        + " <li>"
-                        + "  <a class='page-scroll' href='/Talent/EditTalent'>Edit Talent</a>"
-                        + "</li>"
-                        + " </ul>"
-                        + "</li>"
-                        + "<li class='dropdown'>"
-                        + "<a href='#' id='drop' data-toggle='dropdown' class='dropdown-toggle' role='button'>"
-                        + " Account <b class='caret'></b>"
-                        + " </a>"
-                        + " <ul class='dropdown-menu' role='menu' aria-labelledby='drop'>"
-                        + "<li>"
-                        + " <a class='page-scroll' href='/Home/Profile'>Profile</a>"
-                        + "</li>"
-                        + "<li>"
-                        + " <a class='page-scroll' href='/Home/Subscription'>Subscription</a>"
-                        + "</li>"
-                        + " </ul>"
-                        + "</li>"
-                        + "<li>"
-                        + "   <button type='submit' onclick='logout()' class='btn btn-link navbar-btn navbar-link'>Log out</button>"
-                        + "</li>"
-                        + "</ul>"
-                        + " </form>")
+                    if (hasTalent === true) {
+                        $('#loadNav').html("<form class='navbar-right'>"
+                            + " <ul class='nav navbar-nav navbar-right padding-right'>"
+                            + "<li>"
+                            + " <a>Hello " + displayName + "!</a>"
+                            + " </li>"
+                            + " <li>"
+                            + "  <a class='page-scroll' href='/Talent/EditTalent'>Edit Talent</a>"
+                            + "</li>"
+                            + "<li class='dropdown'>"
+                            + "<a href='#' id='drop' data-toggle='dropdown' class='dropdown-toggle' role='button'>"
+                            + " Account <b class='caret'></b>"
+                            + " </a>"
+                            + " <ul class='dropdown-menu' role='menu' aria-labelledby='drop'>"
+                            + "<li>"
+                            + " <a class='page-scroll' href='/Home/Profile'>Profile</a>"
+                            + "</li>"
+                            + "<li>"
+                            + " <a class='page-scroll' href='/Home/Subscription'>Subscription</a>"
+                            + "</li>"
+                            + " </ul>"
+                            + "</li>"
+                            + "<li>"
+                            + "   <button type='submit' onclick='logout()' class='btn btn-link navbar-btn navbar-link'>Log out</button>"
+                            + "</li>"
+                            + "</ul>"
+                            + " </form>")
+                    }
+                    else {
+                        $('#loadNav').html("<form class='navbar-right'>"
+                            + " <ul class='nav navbar-nav navbar-right padding-right'>"
+                            + "<li>"
+                            + " <a>Hello " + displayName + "!</a>"
+                            + " </li>"
+                            + " <li>"
+                            + "  <a class='page-scroll' href='/Talent/AddTalent'>Add Talent</a>"
+                            + "</li>"
+                            + "<li class='dropdown'>"
+                            + "<a href='#' id='drop' data-toggle='dropdown' class='dropdown-toggle' role='button'>"
+                            + " Account <b class='caret'></b>"
+                            + " </a>"
+                            + " <ul class='dropdown-menu' role='menu' aria-labelledby='drop'>"
+                            + "<li>"
+                            + " <a class='page-scroll' href='/Home/Profile'>Profile</a>"
+                            + "</li>"
+                            + "<li>"
+                            + " <a class='page-scroll' href='/Home/Subscription'>Subscription</a>"
+                            + "</li>"
+                            + " </ul>"
+                            + "</li>"
+                            + "<li>"
+                            + "   <button type='submit' onclick='logout()' class='btn btn-link navbar-btn navbar-link'>Log out</button>"
+                            + "</li>"
+                            + "</ul>"
+                            + " </form>")
+                    }
+
                 }
                 else if (roleName === "Premium") {
                     $('#loadNav').html("<form class='navbar-right'>"
@@ -113,15 +137,18 @@
                         + "<li>"
                         + " <a>Hello " + displayName + "!</a>"
                         + " </li>"
+                        + "<li class='dropdown'>"
+                        + "<a href='#' id='drop' data-toggle='dropdown' class='dropdown-toggle' role='button'>"
+                        + " Talent <b class='caret'></b>"
+                        + " </a>"
+                        + " <ul class='dropdown-menu' role='menu' aria-labelledby='drop'>"
                         + "<li>"
                         + "<a class='page-scroll' href='/Talent/ViewTalents'>View Talents</a>"
                         + "</li >"
                         + " <li>"
-                        + "  <a class='page-scroll' href='/Talent/AddTalent'>Manage Talent</a>"
+                        + "  <a class='page-scroll' href='/Admin/ManageTalents'>Manage Talent</a>"
                         + "</li>"
-
-                        + "<li>"
-                        + " <a class='page-scroll' href='/Home/Profile'>Profile</a>"
+                        + " </ul>"
                         + "</li>"
                         + "<li class='dropdown'>"
                         + "<a href='#' id='drop' data-toggle='dropdown' class='dropdown-toggle' role='button'>"
@@ -132,6 +159,9 @@
                         + "  <a class='page-scroll' href='/Admin/ManageSubscription'>Manage Subscription</a>"
                         + " </li>"
                         + " </ul>"
+                        + "</li>"
+                        + "<li>"
+                        + " <a class='page-scroll' href='/Home/Profile'>Profile</a>"
                         + "</li>"
                         + "<li>"
                         + "   <button type='submit' onclick='logout()' class='btn btn-link navbar-btn navbar-link'>Log out</button>"

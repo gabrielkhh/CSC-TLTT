@@ -68,6 +68,7 @@
         </div>
     </form>
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/aws-sdk/2.94.0/aws-sdk.js"></script>
 <script>
 
     var base64String = '';
@@ -75,13 +76,84 @@
 
     var idToken = sessionStorage.getItem('idToken');
 
-    //var docClient = new AWS.DynamoDB.DocumentClient();
+    var configg = {
+        region: "us-west-2",
+        endpoint: 'apigateway.us-west-2.amazonaws.com',
+        accessKeyId: "AKIAI6R6STURXVOILDOA",
+        secretAccessKey: "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"
+    };
 
-    var table = new AWS.DynamoDB({ params: { TableName: 'CSCSessions' } });
-    table.getItem({ "Key": { "SessionId": { "S": idToken } }, "TableName": "CSCSessions" }, function (err, data) {
-
-        console.log(data); // print the item data
+    AWS.config.update({
+        region: "us-west-2",
+        endpoint: 'apigateway.us-west-2.amazonaws.com',
+        accessKeyId: "AKIAI6R6STURXVOILDOA",
+        secretAccessKey: "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"
     });
+
+    var docClient = new AWS.DynamoDB.DocumentClient();
+
+    var params = {
+        TableName: "CSCSessions",
+        Key:{
+            "SessionId": idToken
+        }
+    };
+
+    docClient.get(params, function (err, data) {
+        if (err) {
+            console.log("Error occurred while retrieving Dynamo data.");
+        } else {
+            console.log(data);
+        }
+    });
+
+    //var table = new AWS.DynamoDB({ params: { TableName: 'CSCSessions', accessKeyId: 'AKIAI6R6STURXVOILDOA', secretAccessKey: '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', region: 'us-west-2', apiVersion: '2012-08-10' } });
+
+    ////var key = 'UNIQUE_KEY_ID';
+
+    ////var request = new AWS.DynamoDB({  }).getItem(params);
+
+    //table.getItem({ Key: { SessionId: { S: idToken } } }, function (err, data) {
+    //    console.log(data.Item); // print the item data
+    //});
+
+    //request.on('success', function (response) {
+
+    //    console.log(response.data.Item.SessionId.S);
+    //});
+
+    //request.send();
+
+    //table.getItem({ "Key": { "SessionId": { "S": idToken } }, "TableName": "CSCSessions" }, function (err, data) {
+
+    //    console.log(data);
+
+    //    console.log(err);
+
+    //});
+
+     //Initialize parameters needed to call DynamoDB
+    //var params = {
+    //    TableName: 'CSCSessions',
+    //    Key: { 'SessionId': { S: 'SessionId' } },
+    //};
+
+
+    //var params = {
+    //    AttributesToGet: [
+    //        "SessionId"
+    //    ],
+    //    TableName: 'CSCSessions',
+    //    Key: {
+    //        "ID": {
+    //            "S": idToken
+    //        },
+    //    }
+    //}
+
+
+
+
 
     //function queryData() {
 
@@ -193,7 +265,6 @@
 
                     console.log(webFormDataInString);
 
-
                     $talentHandler = jQuery.ajax({
                         type: 'PUT',
                         url: 'http://server.anythingabout.me/API/Talents/UpdateTalent',
@@ -246,18 +317,9 @@
                 reader.onerror = function (error) {
                     console.log('Error: ', error);
                 };
-
-
-
-
-
-
-
             }
         });
 
     });
-
-
 
 </script>

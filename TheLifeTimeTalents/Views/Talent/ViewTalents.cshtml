@@ -36,7 +36,7 @@
 
         loadTalentDataHandler = jQuery.ajax({
             method: 'GET',
-            url: 'http://server.anythingabout.me/API/Talents/GetTalent',
+            url: 'http://server.anythingabout.me/API/Talents//GetPublicTalents',
             crossDomain: true,
             dataType: 'json',
             cache: false,
@@ -49,37 +49,38 @@
             console.log(data);
             talentList = data;
 
-            for (i = 0; i < 6; i++){
-                //talent = talentList[0];
-                //talentName = talent.talentName;
-                //shortName = talent.shortName;
-                //reknown = talent.reknown;
-                //bio = talent.bio;
-                //isPrivate = talent.isPrivate;
-                //imageUrl = talent.imageUrl;
+            for (i = 0; i < talentList.length; i++) {
+                talent = talentList[i];
+                talentName = talent.talentName;
+                shortName = talent.shortName;
+                reknown = talent.reknown;
+                bio = talent.bio;
+                isPrivate = talent.isPrivate;
+                imageUrl = talent.imageUrl;
 
-                html_imgs = "<div class='col-lg-4 col-sm-6'>"
-                    + "<a href='http://i2.cdn.cnn.com/cnnnext/dam/assets/160721172133-35-week-in-photos-0722-super-169.jpg' class='portfolio-box'>"
-                    + "<img src='http://i2.cdn.cnn.com/cnnnext/dam/assets/160721172133-35-week-in-photos-0722-super-169.jpg' class='img-responsive' alt=''/>"
-                    + "<div class='portfolio-box-caption'>"
-                    + "<div class='portfolio-box-caption-content'>"
-                    + "<div class='project-name'>Talent Name"
-                    + "</div> "
-                    + "<div class='project-category text-faded'>"
-                    + "<text>Short Name</text>"
-                    + "<br/>"
-                    + "<text>Reknown</text>"
-                    + "<br/>"
-                    + "<text>Bio</text>"
-                    + "</div>"
-                    + "</div> "
-                    + "</div> "
-                    + "</a> "
-                    + "</div>";
+                if (imageUrl != null) {
+                    html_imgs = "<div class='col-lg-4 col-sm-6'>"
+                        + "<a href='" + imageUrl + "'class='portfolio-box'>"
+                        + "<img src='" + imageUrl + "' class='img-responsive' alt=''/>"
+                        + "<div class='portfolio-box-caption'>"
+                        + "<div class='portfolio-box-caption-content'>"
+                        + "<div class='project-name'>Talent Name"
+                        + "</div> "
+                        + "<div class='project-category text-faded'>"
+                        + "<text>Short Name</text>"
+                        + "<br/>"
+                        + "<text>Reknown</text>"
+                        + "<br/>"
+                        + "<text>Bio</text>"
+                        + "</div>"
+                        + "</div> "
+                        + "</div> "
+                        + "</a> "
+                        + "</div>";
 
-                $("#load_Image").append(html_imgs);
-
-            }          
+                    $("#load_Image").append(html_imgs);
+                }
+            }
 
         })
         loadTalentDataHandler.fail(function (data, textStatus, jqXHR) {

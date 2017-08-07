@@ -70,6 +70,34 @@
 </div>
 <script>
 
+    var base64String = '';
+    var webFormData;
+
+    var idToken = sessionStorage.getItem('idToken');
+
+    //var docClient = new AWS.DynamoDB.DocumentClient();
+
+    var table = new AWS.DynamoDB({ params: { TableName: 'CSCSessions' } });
+    table.getItem({ "Key": { "SessionId": { "S": idToken } }, "TableName": "CSCSessions" }, function (err, data) {
+
+        console.log(data); // print the item data
+    });
+
+    //function queryData() {
+
+    //    var params = {
+    //        TableName: "CSCSessions",
+    //    };
+
+    //    docClient.query(params, function (err, data) {
+    //        if (err) {
+    //            console.log(JSON.stringify(err, undefined, 2))
+    //        } else {
+    //            console.log(JSON.stringify(data, undefined, 2))
+    //        }
+    //    });
+    //}
+
     $("[name='privacy']").bootstrapSwitch();
 
     var isPrivate = false;
@@ -129,13 +157,14 @@
 
                 $("#uploadFile").disabled = true;
 
-                function WebFormData(inTalentName, inShortName, inReknown, inBio, inIsPrivate, inImageUrl) {
+                function WebFormData(inTalentName, inShortName, inReknown, inBio, inIsPrivate, inFileName, inFileString) {
                     this.TalentName = inTalentName;
                     this.ShortName = inShortName;
                     this.Reknown = inReknown;
                     this.Bio = inBio;
                     this.IsPrivate = inIsPrivate;
-                    this.ImageUrl = inImageUrl;
+                    this.FileName = inFileName;
+                    this.InputString = inFileString;
                 }
 
                 //NO FRONT END VALIDATION YET
@@ -143,13 +172,8 @@
                 collectedTxtShortName = $('#txtShortName').val();
                 collectedTxtReknown = $('#txtReknown').val();
                 collectedTxtBio = $('#txtBio').val();
-                imageUrl = "http://i2.cdn.cnn.com/cnnnext/dam/assets/160721172133-35-week-in-photos-0722-super-169.jpg"
-
                 var file = $('#file').get(0).files.item(0);
-
-
-                console.log(file);
-
+                var collectedfileName = file.name;
 
                 if ($("#privacy").is(':checked')) {
                     isPrivate = true;
@@ -158,64 +182,82 @@
                     isPrivate = false;
                 }
 
-                var webFormData = new WebFormData(collectedTxtTalentName,
-                    collectedTxtShortName, collectedTxtReknown, collectedTxtBio, isPrivate, imageUrl);
+                var reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = function () {
+                    collectedFileString = reader.result;
 
-                var webFormDataInString = JSON.stringify(webFormData);
+                    webFormData = new WebFormData(collectedTxtTalentName,
+                        collectedTxtShortName, collectedTxtReknown, collectedTxtBio, isPrivate, collectedfileName, collectedFileString);
+                    var webFormDataInString = JSON.stringify(webFormData);
 
-                console.log(webFormDataInString);
+                    console.log(webFormDataInString);
 
-                var idToken = sessionStorage.getItem('idToken');
 
-                $talentHandler = jQuery.ajax({
-                    type: 'PUT',
-                    url: 'http://server.anythingabout.me/API/Talents/UpdateTalent',
-                    crossDomain: true,
-                    data: webFormDataInString,
-                    dataType: 'json',
-                    contentType: 'application/json',
-                    beforeSend: function (xhr) {
-                        xhr.setRequestHeader('Authorization', 'bearer ' + idToken)
-                    }
-                });
+                    $talentHandler = jQuery.ajax({
+                        type: 'PUT',
+                        url: 'http://server.anythingabout.me/API/Talents/UpdateTalent',
+                        crossDomain: true,
+                        data: webFormDataInString,
+                        dataType: 'json',
+                        contentType: 'application/json',
+                        beforeSend: function (xhr) {
+                            xhr.setRequestHeader('Authorization', 'bearer ' + idToken)
+                        }
+                    });
 
-                $talentHandler.done(function (data, textStatus, jqXHR) {
+                    $talentHandler.done(function (data, textStatus, jqXHR) {
 
-                    swal({
-                        title: "Successful!",
-                        text: "Talent Added!",
-                        type: "success"
-                    },
-                        function () {
-                            ignore = true;
-                            window.location.replace("/Home/Index");
-                        });
+                        swal({
+                            title: "Successful!",
+                            text: "Talent Added!",
+                            type: "success"
+                        },
+                            function () {
+                                ignore = true;
+                                window.location.replace("/Home/Index");
+                            });
 
-                });
+                    });
 
-                $talentHandler.fail(function (data, textStatus, jqXHR) {
-                    toastr.options = {
-                        "closeButton": false,
-                        "debug": false,
-                        "newestOnTop": false,
-                        "progressBar": false,
-                        "positionClass": "toast-bottom-left",
-                        "preventDuplicates": false,
-                        "onclick": null,
-                        "showDuration": "300",
-                        "hideDuration": "1000",
-                        "timeOut": "5000",
-                        "extendedTimeOut": "1000",
-                        "showEasing": "swing",
-                        "hideEasing": "linear",
-                        "showMethod": "fadeIn",
-                        "hideMethod": "fadeOut"
-                    }
+                    $talentHandler.fail(function (data, textStatus, jqXHR) {
+                        toastr.options = {
+                            "closeButton": false,
+                            "debug": false,
+                            "newestOnTop": false,
+                            "progressBar": false,
+                            "positionClass": "toast-bottom-left",
+                            "preventDuplicates": false,
+                            "onclick": null,
+                            "showDuration": "300",
+                            "hideDuration": "1000",
+                            "timeOut": "5000",
+                            "extendedTimeOut": "1000",
+                            "showEasing": "swing",
+                            "hideEasing": "linear",
+                            "showMethod": "fadeIn",
+                            "hideMethod": "fadeOut"
+                        }
 
-                    toastr["error"](jqXHR, "Error")
-                });
+                        toastr["error"](jqXHR, "Error")
+                    });
+
+                };
+                reader.onerror = function (error) {
+                    console.log('Error: ', error);
+                };
+
+
+
+
+
+
+
             }
         });
 
     });
+
+
+
 </script>

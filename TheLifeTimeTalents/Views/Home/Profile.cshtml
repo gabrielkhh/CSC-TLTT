@@ -1,12 +1,226 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "Profile";
 }
-
 <div class="container body-content">
     <h2>@ViewData["Title"].</h2>
-
-    <h4>User Profile.</h4>
-    <hr />
-
+    <div class="row">
+        <div class="col-md-6 pull-left">
+            <form id="myForm" class="form-horizontal smaller-width">
+                <h4>User Profile.</h4>
+                <hr />
+                <div class="form-group">
+                    <label class="col-md-2 control-label">Name</label>
+                    <div class="col-md-10">
+                        <input type="text" id="txtName" name="txtName" class="form-control" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">Username</label>
+                    <div class="col-md-10">
+                        <input type="text" id="txtUsername" name="txtUsername" class="form-control" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">Email</label>
+                    <div class="col-md-10">
+                        <input id="txtEmail" name="txtEmail" type="email" class="form-control" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">New Password</label>
+                    <div class="col-md-10">
+                        <input type="password" id="txtPassword" name="txtPassword" class="form-control" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">Confirm New Password</label>
+                    <div class="col-md-10">
+                        <input type="password" id="txtConfirmPassword" name="txtConfirmPassword" class="form-control" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <button id="btnUpdate" type="submit" class="btn btn-default">Update</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
+
+<script>
+
+    loadProfileData();
+
+    function loadProfileData() {
+
+        var idToken = sessionStorage.getItem('idToken');
+
+        loadProfileDataHandler = jQuery.ajax({
+            method: 'GET',
+            url: 'http://server.anythingabout.me/Account/GetAccountDetails',
+            crossDomain: true,
+            dataType: 'json',
+            cache: false,
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader('Authorization', 'bearer ' + idToken)
+            }
+        })
+        loadProfileDataHandler.done(function (data, textStatus, jqXHR) {
+
+            console.log(data);
+
+            var name = data.displayName;
+            var username = data.userName;
+            var email = data.email;
+
+            $('#txtName').val(name);
+            $('#txtUsername').val(username);
+            $('#txtEmail').val(email);
+
+        })
+        loadProfileDataHandler.fail(function (data, textStatus, jqXHR) {
+            toastr.options = {
+                "closeButton": false,
+                "debug": false,
+                "newestOnTop": false,
+                "progressBar": false,
+                "positionClass": "toast-bottom-left",
+                "preventDuplicates": false,
+                "onclick": null,
+                "showDuration": "300",
+                "hideDuration": "1000",
+                "timeOut": "5000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            }
+            toastr["error"]("There was an issue retrieving data from the server.", "Error")
+        })
+    }
+
+    $(document).ready(function () {
+
+        $("#myForm").validate({
+            rules: {
+                txtName: {
+                    required: true,
+                },
+                txtUsername: {
+                    required: true,
+                },
+                txtEmail: {
+                    required: true,
+                },
+                txtConfirmPassword: {
+                    equalTo: "#txtPassword"
+                }
+            },
+            messages: {
+                txtName: {
+                    required: "Please enter your name",
+                },
+                txtUsername: {
+                    required: "Please enter your username",
+                },
+                txtEmail: {
+                    required: "Please enter your email",
+                },
+                txtConfirmPassword: {
+                    equalTo: "The passwords do not match",
+                }
+            },
+            onkeyup: false, //turn off auto validate whilst typing
+            submitHandler: function (form) {
+
+                swal({
+                    title: "Update Profile?",
+                    showCancelButton: true,
+                    closeOnConfirm: false,
+                    confirmButtonText: "Yes",
+                    cancelButtonText: "No",
+                    confirmButtonColor: "#F05F40",
+                    showLoaderOnConfirm: true,
+                },
+                    function () {
+
+                        event.preventDefault();
+
+                        function WebFormData(inName, inUserName, inEmail, inPassword, inConfirmPassord) {
+                            this.DisplayName = inName;
+                            this.UserName = inUserName;
+                            this.Email = inEmail;
+                            this.Password = inPassword;
+                            this.ConfirmPassword = inConfirmPassord;
+                        }
+
+                        collectedName = $('#txtName').val();
+                        collectedUserName = $('#txtUsername').val();
+                        collectedTxtEmail = $('#txtEmail').val();
+                        collectedTxtPassword = $('#txtPassword').val();
+                        collectedTxtConfirmPassword = $('#txtConfirmPassword').val();
+
+                        if (collectedTxtPassword == "") {
+                            collectedTxtPassword = null;
+                            collectedTxtConfirmPassword = null;
+                        }
+
+                        var webFormData = new WebFormData(collectedName, collectedUserName, collectedTxtEmail,
+                            collectedTxtPassword, collectedTxtConfirmPassword);
+
+                        var webFormDataInString = JSON.stringify(webFormData);
+
+                        console.log(webFormDataInString);
+
+                        $updateHandler = jQuery.ajax({
+                            type: 'POST',
+                            url: 'http://server.anythingabout.me/Account/Register',
+                            crossDomain: true,
+                            data: webFormDataInString,
+                            dataType: 'json',
+                            contentType: 'application/json',
+                        });
+
+                        $updateHandler.done(function (data, textStatus, jqXHR) {
+                            swal({
+                                title: "Successful!",
+                                text: "Account Updated!",
+                                type: "success"
+                            },
+                                function () {
+                                    ignore = true;
+                                    window.location.replace("/Home/Account");
+                                });
+                        });
+
+                        $updateHandler.fail(function (data, textStatus, jqXHR) {
+                            toastr.options = {
+                                "closeButton": false,
+                                "debug": false,
+                                "newestOnTop": false,
+                                "progressBar": false,
+                                "positionClass": "toast-bottom-left",
+                                "preventDuplicates": false,
+                                "onclick": null,
+                                "showDuration": "300",
+                                "hideDuration": "1000",
+                                "timeOut": "5000",
+                                "extendedTimeOut": "1000",
+                                "showEasing": "swing",
+                                "hideEasing": "linear",
+                                "showMethod": "fadeIn",
+                                "hideMethod": "fadeOut"
+                            }
+
+                            toastr["error"](jqXHR, "Error")
+                        });
+
+                    });
+            }
+        });
+
+    });
+
+</script>

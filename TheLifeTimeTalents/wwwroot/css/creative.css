@@ -13,6 +13,15 @@
     background-repeat: no-repeat;
 }
 
+.thumbnail-small {
+    width: 150px;
+    height: 100px;
+    display: inline-block; /* makes it fit in like an <img> */
+    background-size: cover; /* or contain */
+    background-position: center center;
+    background-repeat: no-repeat;
+}
+
 .outcome {
     float: left;
     width: 100%;
@@ -73,6 +82,12 @@
 }
 
 .toCenter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.toRight {
     display: flex;
     align-items: center;
     justify-content: center;

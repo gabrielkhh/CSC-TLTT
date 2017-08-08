@@ -53,6 +53,9 @@
 </div>
 
 <script>
+
+    var idToken = sessionStorage.getItem('idToken');
+
     var stripe = Stripe('pk_test_2uTO5iGEzuZns66zBpAO3gks');
     var elements = stripe.elements();
 
@@ -75,9 +78,9 @@
         if (result.token) {
 
             function WebFormData(inName, inEmail, inTokenId) {
-                this.Name = inName;
-                this.Email = inEmail;
-                this.TokenId = inTokenId;
+                this.stripeName = inName;
+                this.stripeEmail = inEmail;
+                this.stripeToken = inTokenId;
             }
 
             collectedName = result.token.card.name;
@@ -98,6 +101,9 @@
                 data: webFormDataInString,
                 dataType: 'json',
                 contentType: 'application/json',
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('Authorization', 'bearer ' + idToken)
+                }
             });
 
             $paymentHandler.done(function (data, textStatus, jqXHR) {
@@ -113,24 +119,12 @@
             });
 
             $paymentHandler.fail(function (data, textStatus, jqXHR) {
-                toastr.options = {
-                    "closeButton": false,
-                    "debug": false,
-                    "newestOnTop": false,
-                    "progressBar": false,
-                    "positionClass": "toast-bottom-left",
-                    "preventDuplicates": false,
-                    "onclick": null,
-                    "showDuration": "300",
-                    "hideDuration": "1000",
-                    "timeOut": "5000",
-                    "extendedTimeOut": "1000",
-                    "showEasing": "swing",
-                    "hideEasing": "linear",
-                    "showMethod": "fadeIn",
-                    "hideMethod": "fadeOut"
-                }
-                toastr["error"](jqXHR, "Error")
+                swal({
+                    title: "Error!",
+                    text: "Payment fail!",
+                    type: "error",
+                    confirmButtonColor: "#F05F40",
+                });
             });
 
         } else if (result.error) {

@@ -9,6 +9,13 @@
 
     if (id_token != null) {
 
+        $(window).on('mouseover', (function () {
+            window.onbeforeunload = null;
+        }));
+        $(window).on('mouseout', (function () {
+            window.onbeforeunload = getLogout;
+        }));
+
         loadDisplayNameData();
 
         function loadDisplayNameData() {
@@ -55,7 +62,7 @@
                             + " </ul>"
                             + "</li>"
                             + "<li>"
-                            + "   <button type='submit' onclick='logout()' class='btn btn-link navbar-btn navbar-link'>Log out</button>"
+                            + "   <button type='submit' onclick='getLogout()' class='btn btn-link navbar-btn navbar-link'>Log out</button>"
                             + "</li>"
                             + "</ul>"
                             + " </form>")
@@ -83,7 +90,7 @@
                             + " </ul>"
                             + "</li>"
                             + "<li>"
-                            + "   <button type='submit' onclick='logout()' class='btn btn-link navbar-btn navbar-link'>Log out</button>"
+                            + "   <button type='submit' onclick='getLogout()' class='btn btn-link navbar-btn navbar-link'>Log out</button>"
                             + "</li>"
                             + "</ul>"
                             + " </form>")
@@ -117,7 +124,7 @@
                             + " </ul>"
                             + "</li>"
                             + "<li>"
-                            + "   <button type='submit' onclick='logout()' class='btn btn-link navbar-btn navbar-link'>Log out</button>"
+                            + "   <button type='submit' onclick='getLogout()' class='btn btn-link navbar-btn navbar-link'>Log out</button>"
                             + "</li>"
                             + "</ul>"
                             + " </form>")
@@ -147,7 +154,7 @@
                             + " </ul>"
                             + "</li>"
                             + "<li>"
-                            + "   <button type='submit' onclick='logout()' class='btn btn-link navbar-btn navbar-link'>Log out</button>"
+                            + "   <button type='submit' onclick='getLogout()' class='btn btn-link navbar-btn navbar-link'>Log out</button>"
                             + "</li>"
                             + "</ul>"
                             + " </form>")
@@ -186,7 +193,7 @@
                         + " <a class='page-scroll' href='/Home/Profile'>Profile</a>"
                         + "</li>"
                         + "<li>"
-                        + "   <button type='submit' onclick='logout()' class='btn btn-link navbar-btn navbar-link'>Log out</button>"
+                        + "   <button type='submit' onclick='getLogout()' class='btn btn-link navbar-btn navbar-link'>Log out</button>"
                         + "</li>"
                         + "</ul>"
                         + " </form>")
@@ -224,50 +231,45 @@
             + "</form>")
     }
 
-    function logout() {
+    function getLogout() {
 
         event.preventDefault();
 
-        getLogout();
+        getLogoutHandler = jQuery.ajax({
+            method: 'GET',
+            url: 'http://server.anythingabout.me/Account/Logout',
+            crossDomain: true,
+            dataType: 'json',
+            cache: false,
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader('Authorization', 'bearer ' + id_token)
+            }
+        })
+        getLogoutHandler.done(function (data, textStatus, jqXHR) {
 
-        function getLogout() {
+            sessionStorage.clear();
+            window.location.replace("/Home/Index");
 
-            getLogoutHandler = jQuery.ajax({
-                method: 'GET',
-                url: 'http://server.anythingabout.me/Account/Logout',
-                crossDomain: true,
-                dataType: 'json',
-                cache: false,
-                beforeSend: function (xhr) {
-                    xhr.setRequestHeader('Authorization', 'bearer ' + id_token)
-                }
-            })
-            getLogoutHandler.done(function (data, textStatus, jqXHR) {
-
-                sessionStorage.clear();
-                window.location.replace("/Home/Index");
-
-            })
-            getLogoutHandler.fail(function (data, textStatus, jqXHR) {
-                toastr.options = {
-                    "closeButton": false,
-                    "debug": false,
-                    "newestOnTop": false,
-                    "progressBar": false,
-                    "positionClass": "toast-bottom-left",
-                    "preventDuplicates": false,
-                    "onclick": null,
-                    "showDuration": "300",
-                    "hideDuration": "1000",
-                    "timeOut": "5000",
-                    "extendedTimeOut": "1000",
-                    "showEasing": "swing",
-                    "hideEasing": "linear",
-                    "showMethod": "fadeIn",
-                    "hideMethod": "fadeOut"
-                }
-                toastr["error"]("There was an issue retrieving data from the server.", "Error")
-            })
-        }
+        })
+        getLogoutHandler.fail(function (data, textStatus, jqXHR) {
+            toastr.options = {
+                "closeButton": false,
+                "debug": false,
+                "newestOnTop": false,
+                "progressBar": false,
+                "positionClass": "toast-bottom-left",
+                "preventDuplicates": false,
+                "onclick": null,
+                "showDuration": "300",
+                "hideDuration": "1000",
+                "timeOut": "5000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            }
+            toastr["error"]("There was an issue retrieving data from the server.", "Error")
+        })
     }
 </script>

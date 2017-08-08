@@ -94,73 +94,84 @@
             onkeyup: false, //turn off auto validate whilst typing
             submitHandler: function (form) {
 
-                $("#btnRegister").disabled = true;
-
                 event.preventDefault();
 
-                function WebFormData(inName, inUserName, inEmail, inPassword, inConfirmPassord, inCaptchaResponse) {
-                    this.DisplayName = inName;
-                    this.UserName = inUserName;
-                    this.Email = inEmail;
-                    this.Password = inPassword;
-                    this.ConfirmPassword = inConfirmPassord;
-                    this.CaptchaResponse = inCaptchaResponse;
-                }
+                swal({
+                    title: "Register an account?",
+                    showCancelButton: true,
+                    closeOnConfirm: false,
+                    confirmButtonText: "Yes",
+                    cancelButtonText: "No",
+                    confirmButtonColor: "#F05F40",
+                    showLoaderOnConfirm: true,
+                },
+                    function () {
 
-                collectedName = $('#txtName').val();
-                collectedUserName = $('#txtUsername').val();
-                collectedTxtEmail = $('#txtEmail').val();
-                collectedTxtPassword = $('#txtPassword').val();
-                collectedTxtConfirmPassword = $('#txtConfirmPassword').val();
-                collectedCaptchaResponse = grecaptcha.getResponse();
+                        function WebFormData(inName, inUserName, inEmail, inPassword, inConfirmPassord, inCaptchaResponse) {
+                            this.DisplayName = inName;
+                            this.UserName = inUserName;
+                            this.Email = inEmail;
+                            this.Password = inPassword;
+                            this.ConfirmPassword = inConfirmPassord;
+                            this.CaptchaResponse = inCaptchaResponse;
+                        }
 
-                var webFormData = new WebFormData(collectedName, collectedUserName, collectedTxtEmail,
-                    collectedTxtPassword, collectedTxtConfirmPassword, collectedCaptchaResponse);
+                        collectedName = $('#txtName').val();
+                        collectedUserName = $('#txtUsername').val();
+                        collectedTxtEmail = $('#txtEmail').val();
+                        collectedTxtPassword = $('#txtPassword').val();
+                        collectedTxtConfirmPassword = $('#txtConfirmPassword').val();
+                        collectedCaptchaResponse = grecaptcha.getResponse();
 
-                var webFormDataInString = JSON.stringify(webFormData);
+                        var webFormData = new WebFormData(collectedName, collectedUserName, collectedTxtEmail,
+                            collectedTxtPassword, collectedTxtConfirmPassword, collectedCaptchaResponse);
 
-                $registerHandler = jQuery.ajax({
-                    type: 'POST',
-                    url: 'http://server.anythingabout.me/Account/Register',
-                    crossDomain: true,
-                    data: webFormDataInString,
-                    dataType: 'json',
-                    contentType: 'application/json',
-                });
+                        var webFormDataInString = JSON.stringify(webFormData);
 
-                $registerHandler.done(function (data, textStatus, jqXHR) {
-                    swal({
-                        title: "Successful!",
-                        text: "Registration Successful!",
-                        type: "success"
-                    },
-                        function () {
-                            ignore = true;
-                            window.location.replace("/Home/Index");
+                        $registerHandler = jQuery.ajax({
+                            type: 'POST',
+                            url: 'http://server.anythingabout.me/Account/Register',
+                            crossDomain: true,
+                            data: webFormDataInString,
+                            dataType: 'json',
+                            contentType: 'application/json',
                         });
-                });
 
-                $registerHandler.fail(function (data, textStatus, jqXHR) {
-                    toastr.options = {
-                        "closeButton": false,
-                        "debug": false,
-                        "newestOnTop": false,
-                        "progressBar": false,
-                        "positionClass": "toast-bottom-left",
-                        "preventDuplicates": false,
-                        "onclick": null,
-                        "showDuration": "300",
-                        "hideDuration": "1000",
-                        "timeOut": "5000",
-                        "extendedTimeOut": "1000",
-                        "showEasing": "swing",
-                        "hideEasing": "linear",
-                        "showMethod": "fadeIn",
-                        "hideMethod": "fadeOut"
-                    }
+                        $registerHandler.done(function (data, textStatus, jqXHR) {
+                            swal({
+                                title: "Successful!",
+                                text: "Registration Successful!",
+                                type: "success",
+                                confirmButtonColor: "#F05F40",
+                            },
+                                function () {
+                                    ignore = true;
+                                    window.location.replace("/Home/Index");
+                                });
+                        });
 
-                    toastr["error"](jqXHR, "Error")
-                });
+                        $registerHandler.fail(function (data, textStatus, jqXHR) {
+                            toastr.options = {
+                                "closeButton": false,
+                                "debug": false,
+                                "newestOnTop": false,
+                                "progressBar": false,
+                                "positionClass": "toast-bottom-left",
+                                "preventDuplicates": false,
+                                "onclick": null,
+                                "showDuration": "300",
+                                "hideDuration": "1000",
+                                "timeOut": "5000",
+                                "extendedTimeOut": "1000",
+                                "showEasing": "swing",
+                                "hideEasing": "linear",
+                                "showMethod": "fadeIn",
+                                "hideMethod": "fadeOut"
+                            }
+
+                            toastr["error"](jqXHR, "Error")
+                        });
+                    });
             }
         });
 

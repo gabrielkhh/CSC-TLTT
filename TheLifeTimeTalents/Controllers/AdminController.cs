@@ -20,5 +20,10 @@ namespace TheLifeTimeTalents.Controllers
         {
             return View();
         }
+
+        public IActionResult EditTalent()
+        {
+            return View();
+        }
     }
 }

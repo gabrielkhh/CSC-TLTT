@@ -65,7 +65,7 @@
             onkeyup: false, //turn off auto validate whilst typing
             submitHandler: function (form) {
 
-                $("#btnLogin").disabled = true;
+                $("#btnLogin").attr('disabled', 'disabled');
 
                 event.preventDefault();
 
@@ -103,6 +103,7 @@
                 });
 
                 $loginHandler.fail(function (data, textStatus, jqXHR) {
+                    $("#btnLogin").removeAttr("disabled") 
                     toastr.options = {
                         "closeButton": false,
                         "debug": false,

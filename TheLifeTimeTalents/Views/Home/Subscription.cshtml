@@ -77,55 +77,66 @@
 
         if (result.token) {
 
-            function WebFormData(inName, inEmail, inTokenId) {
-                this.stripeName = inName;
-                this.stripeEmail = inEmail;
-                this.stripeToken = inTokenId;
-            }
+            swal({
+                title: "Proceed to make a payment?",
+                showCancelButton: true,
+                closeOnConfirm: false,
+                confirmButtonText: "Yes",
+                cancelButtonText: "No",
+                confirmButtonColor: "#F05F40",
+                showLoaderOnConfirm: true,
+            },
+                function () {
+                    function WebFormData(inName, inEmail, inTokenId) {
+                        this.stripeName = inName;
+                        this.stripeEmail = inEmail;
+                        this.stripeToken = inTokenId;
+                    }
 
-            collectedName = result.token.card.name;
-            collectedEmail = result.token.email;
-            collectedTokenId = result.token.id;
+                    collectedName = result.token.card.name;
+                    collectedEmail = result.token.email;
+                    collectedTokenId = result.token.id;
 
-            var webFormData = new WebFormData(collectedName,
-                collectedEmail, collectedTokenId);
+                    var webFormData = new WebFormData(collectedName,
+                        collectedEmail, collectedTokenId);
 
-            var webFormDataInString = JSON.stringify(webFormData);
+                    var webFormDataInString = JSON.stringify(webFormData);
 
-            console.log(webFormDataInString);
+                    console.log(webFormDataInString);
 
-            $paymentHandler = jQuery.ajax({
-                type: 'POST',
-                url: 'http://server.anythingabout.me/API/Subcription/Payment',
-                crossDomain: true,
-                data: webFormDataInString,
-                dataType: 'json',
-                contentType: 'application/json',
-                beforeSend: function (xhr) {
-                    xhr.setRequestHeader('Authorization', 'bearer ' + idToken)
-                }
-            });
-
-            $paymentHandler.done(function (data, textStatus, jqXHR) {
-                swal({
-                    title: "Successful!",
-                    text: "Payment Made!",
-                    type: "success"
-                },
-                    function () {
-                        ignore = true;
-                        window.location.replace("/Home/Subscription");
+                    $paymentHandler = jQuery.ajax({
+                        type: 'POST',
+                        url: 'http://server.anythingabout.me/API/Subcription/Payment',
+                        crossDomain: true,
+                        data: webFormDataInString,
+                        dataType: 'json',
+                        contentType: 'application/json',
+                        beforeSend: function (xhr) {
+                            xhr.setRequestHeader('Authorization', 'bearer ' + idToken)
+                        }
                     });
-            });
 
-            $paymentHandler.fail(function (data, textStatus, jqXHR) {
-                swal({
-                    title: "Error!",
-                    text: "Payment fail!",
-                    type: "error",
-                    confirmButtonColor: "#F05F40",
+                    $paymentHandler.done(function (data, textStatus, jqXHR) {
+                        swal({
+                            title: "Successful!",
+                            text: "Payment Made!",
+                            type: "success"
+                        },
+                            function () {
+                                ignore = true;
+                                window.location.replace("/Home/Subscription");
+                            });
+                    });
+
+                    $paymentHandler.fail(function (data, textStatus, jqXHR) {
+                        swal({
+                            title: "Error!",
+                            text: "Payment fail!",
+                            type: "error",
+                            confirmButtonColor: "#F05F40",
+                        });
+                    });
                 });
-            });
 
         } else if (result.error) {
             errorElement.textContent = result.error.message;
@@ -158,8 +169,6 @@
             },
             onkeyup: false, //turn off auto validate whilst typing
             submitHandler: function (form) {
-
-                $("#btnPay").disabled = true;
 
                 event.preventDefault();
 

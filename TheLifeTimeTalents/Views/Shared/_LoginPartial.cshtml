@@ -9,13 +9,6 @@
 
     if (id_token != null) {
 
-        $(window).on('mouseover', (function () {
-            window.onbeforeunload = null;
-        }));
-        $(window).on('mouseout', (function () {
-            window.onbeforeunload = getLogout;
-        }));
-
         loadDisplayNameData();
 
         function loadDisplayNameData() {
@@ -230,6 +223,13 @@
             + "</ul>"
             + "</form>")
     }
+
+    $(window).on('mouseover', (function () {
+        window.onbeforeunload = null;
+    }));
+    $(window).on('mouseout', (function () {
+        window.onbeforeunload = getLogout;
+    }));
 
     function getLogout() {
 

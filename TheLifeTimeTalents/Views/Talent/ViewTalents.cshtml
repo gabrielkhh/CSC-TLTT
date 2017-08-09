@@ -27,6 +27,7 @@
     var isPrivate = "";
     var imageUrl = "";
     var html_imgs = '';
+    var username = '';
 
     loadTalentData();
 
@@ -58,6 +59,7 @@
                 bio = talent.bio;
                 isPrivate = talent.isPrivate;
                 imageUrl = talent.imageUrl;
+                username = talent.userName;
 
                 if (imageUrl != null) {
                     html_imgs = "<div class='col-lg-4 col-sm-6 forSearch'>"
@@ -73,6 +75,8 @@
                         + "<text>Reknown: " + reknown + "</text>"
                         + "<br/>"
                         + "<text>Bio: " + bio + "</text>"
+                        + "<br/><br/>"
+                        + "<text>Uploaded by " + username + "</text>"
                         + "</div>"
                         + "</div> "
                         + "</div> "

@@ -34,6 +34,7 @@
                                 <th>Talent Name</th>
                                 <th>Short Name</th>
                                 <th>Reknown</th>
+                                <th>Uploaded by</th>
                                 <th>&nbsp;</th>
                             </tr>
                         </thead>
@@ -54,6 +55,8 @@
     var reknown = ""
     var talentId = "";
     var imageUrl = "";
+    var displayName = "";
+    var userId = "";
     var $tableElement = null;
     var $cellElement = null;
     var $rowElement = null;
@@ -90,6 +93,8 @@
                 isPrivate = talent.isPrivate;
                 imageUrl = talent.imageUrl;
                 talentId = talent.talentId;
+                displayName = talent.displayName;
+                userId = talent.userId;
 
                 if (talentName != null) {
                     $rowElement = $('<ul></ul>');
@@ -110,7 +115,10 @@
                     $cellElement = $('<td></td>', { text: reknown });
                     $rowElement.append($cellElement);
 
-                    $hyperLinkElement = $('<a>Edit Talent</a>').attr('href', '/Admin/EditTalent/' + talentId);
+                    $cellElement = $('<td></td>', { text: displayName });
+                    $rowElement.append($cellElement);
+
+                    $hyperLinkElement = $('<a>Edit Talent</a>').attr('href', '/Admin/EditTalent/' + userId);
                     $hyperLinkElement.addClass('btn btn-primary');
                     $cellElement = $('<td></td>');
                     $cellElement.append($hyperLinkElement);

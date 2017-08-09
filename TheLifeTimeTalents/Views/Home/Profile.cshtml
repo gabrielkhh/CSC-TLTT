@@ -50,6 +50,8 @@
 
 <script>
 
+    var idToken = sessionStorage.getItem('idToken');
+
     loadProfileData();
 
     function loadProfileData() {
@@ -175,23 +177,27 @@
                         console.log(webFormDataInString);
 
                         $updateHandler = jQuery.ajax({
-                            type: 'POST',
+                            type: 'PUT',
                             url: 'http://server.anythingabout.me/Account/UpdateUserDetails',
                             crossDomain: true,
                             data: webFormDataInString,
                             dataType: 'json',
                             contentType: 'application/json',
+                            beforeSend: function (xhr) {
+                                xhr.setRequestHeader('Authorization', 'bearer ' + idToken)
+                            }
                         });
 
                         $updateHandler.done(function (data, textStatus, jqXHR) {
                             swal({
                                 title: "Successful!",
                                 text: "Account Updated!",
-                                type: "success"
+                                type: "success",
+                                confirmButtonColor: "#F05F40",
                             },
                                 function () {
                                     ignore = true;
-                                    window.location.replace("/Home/Account");
+                                    window.location.replace("/Home/Profile");
                                 });
                         });
 

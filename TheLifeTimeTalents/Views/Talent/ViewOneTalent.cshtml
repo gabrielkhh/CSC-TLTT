@@ -3,7 +3,7 @@
     ViewData["Title"] = "View Talent";
 }
 <div class="container body-content">
-    <h5 class="orange-text">Previous page</h5>
+    <a class="orange-text" onclick="loadPrevious();">Previous page</a>
     <h2>@ViewData["Title"].</h2>
 
 
@@ -48,15 +48,6 @@
         <br /><br /><br />
 
         <div class="form-group">
-            <label class="col-md-2 control-label">Private</label>
-            <div class="col-md-10">
-                <text id="txtPrivate"></text>
-            </div>
-        </div>
-
-        <br /><br /><br />
-
-        <div class="form-group">
             <label class="col-md-2 control-label">Current Image</label>
             <div class="col-md-10">
                 <img id="currentImage" class="thumbnail" />
@@ -85,16 +76,13 @@
 
     var idToken = sessionStorage.getItem('idToken');
 
-    var isBan = false;
     var talentList = "";
     var talentName = "";
     var shortName = "";
     var reknown = ""
     var bio = "";
-    var isPrivate = "";
     var imageUrl = "";
     var displayName = "";
-    var role_Name = "";
 
     loadTalentData();
 
@@ -113,53 +101,20 @@
         loadTalentDataHandler.done(function (data, textStatus, jqXHR) {
 
             console.log(data);
-            talentList = data;
 
+            talentList = data;
             talentName = talentList.talentName;
             shortName = talentList.shortName;
             reknown = talentList.reknown;
             bio = talentList.bio;
-            isPrivate = talentList.isPrivate;
             imageUrl = talentList.imageUrl;
             displayName = talentList.displayName;
-            role_Name = talentList.roleName;
-            IsBanned = talentList.isBanned;
 
             $('#txtTalentName').text(talentName);
             $('#txtShortName').text(shortName);
             $('#txtReknown').text(reknown);
             $('#txtBio').text(bio);
             $('#txtDisplayName').text("Talent uploaded by " + displayName);
-
-            if (role_Name == "Standard") {
-                $("#roleValue").val("1");
-
-            }
-            else if (role_Name == "Premium") {
-                $("#roleValue").val("2");
-
-            }
-            else {
-                $("#roleValue").val("3");
-
-            }
-
-            $("#roleValue").selectpicker("refresh");
-
-
-            if (isPrivate == true) {
-                $('#txtPrivate').text("Yes");
-            }
-            else {
-                $('#txtPrivate').text("No");
-            }
-
-            if (IsBanned == true) {
-                $("[name='ban']").bootstrapSwitch('state', true);
-            }
-            else {
-                $("[name='ban']").bootstrapSwitch('state', false);
-            }
 
             $('#currentImage').attr('src', imageUrl);
 
@@ -186,15 +141,9 @@
         })
     }
 
-
-</script>
-
-
-<script>
-    /**
-     *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
-     *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
-     */
+    function loadPrevious() {
+        location.replace("/Talent/ViewTalents");
+    }
 
     var disqus_config = function () {
         this.page.url = window.location.href;  // Replace PAGE_URL with your page's canonical URL variable
@@ -209,5 +158,7 @@
         s.setAttribute('data-timestamp', +new Date());
         (d.head || d.body).appendChild(s);
     })();
+
 </script>
+
 <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>

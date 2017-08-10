@@ -10,11 +10,13 @@
     <hr />
 
     <form id="myForm" data-toggle="validator">
+
+
         <div class="row">
             <div class="form-group">
-                <label class="col-md-2 control-label">Plan Id</label>
+                <label class="col-md-2 control-label">Plan Name</label>
                 <div class="col-md-2">
-                    <input type="text" id="txtPlanId" name="txtPlanId" class="form-control" />
+                    <input type="text" id="txtPlanName" name="txtPlanName" class="form-control" />
                 </div>
             </div>
         </div>
@@ -23,9 +25,9 @@
 
         <div class="row">
             <div class="form-group">
-                <label class="col-md-2 control-label">Plan Name</label>
+                <label class="col-md-2 control-label">Plan Id</label>
                 <div class="col-md-10">
-                    <text id="txtPlanName"></text>
+                    <text id="txtPlanId"></text>
                 </div>
             </div>
         </div>
@@ -83,9 +85,8 @@
             var roundedPlanPrice = (planPrice / 100).toFixed(2);
 
             
-
-            $('#txtPlanId').val(planId);
-            $('#txtPlanName').text(planName);
+            $('#txtPlanName').val(planName);
+            $('#txtPlanId').text(planId);
             $('#txtPlanPrice').text(planCurrency.toUpperCase() + " $" + roundedPlanPrice + "/" + planInterval);
 
         })
@@ -128,14 +129,14 @@
             },
                 function () {
 
-                    function WebFormData(inPlanId, inLocalPlanId) {
-                        this.planId = inPlanId;
+                    function WebFormData(inPlanName, inLocalPlanId) {
+                        this.planName = inPlanName;
                         this.localPlanId = inLocalPlanId;
                     }
 
-                    collectedPlanId = $('#txtPlanId').val();
+                    collectedPlanName = $('#txtPlanName').val();
 
-                    var webFormData = new WebFormData(collectedPlanId, localPlanId);
+                    var webFormData = new WebFormData(collectedPlanName, localPlanId);
 
                     var webFormDataInString = JSON.stringify(webFormData);
 

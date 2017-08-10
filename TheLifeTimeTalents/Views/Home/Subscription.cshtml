@@ -58,89 +58,142 @@
 
     var role_name;
 
-    loadRole();
+    loadPlanData();
 
-    function loadRole() {
+    function loadPlanData() {
 
-        loadRoleHandler = jQuery.ajax({
+        loadPlanDataHandler = jQuery.ajax({
             method: 'GET',
-            url: 'http://server.anythingabout.me/Account/GetUserDetails/',
+            url: 'http://server.anythingabout.me/API/Subscription/GetSubscription',
             crossDomain: true,
             dataType: 'json',
             cache: false,
             beforeSend: function (xhr) {
-                xhr.setRequestHeader('Authorization', 'bearer ' + id_token)
+                xhr.setRequestHeader('Authorization', 'bearer ' + idToken)
             }
         })
-        loadRoleHandler.done(function (data, textStatus, jqXHR) {
+        loadPlanDataHandler.done(function (data, textStatus, jqXHR) {
 
-            role_name = data.roleName;
+            console.log(data);
 
-            if (role_name === "Standard") {
+            var planName = data.planName;
+            var planPrice = data.planAmount;
+            var planCurrency = data.planCurrency;
+            var planInterval = data.planInterval;
 
-                $("#loadPage").html(
-                    "<form id='myForm' class='form-horizontal smaller-width'>"
-                    + " <h4>View and seach all public talents.</h4>"
-                    + " <hr />"
-                    + "  <p>Enjoy searching and viewing talents at only S$9.99/month!</p>"
-                    + " <p>Total Amount: S$9.99</p>"
-                    + "  <br />"
-                    + "  <div class='form-group'>"
-                    + "      <label class='col-md-2 control-label'>Name</label>"
-                    + "      <div class='col-md-10'>"
-                    + "         <input name='cardholdername' id='cardholder-name' class='form-control' placeholder='Jane Doe' />"
-                    + "      </div>"
-                    + "   </div>"
-                    + "   <div class='form-group'>"
-                    + "       <label class='col-md-2 control-label'>Email</label>"
-                    + "       <div class='col-md-10'>"
-                    + "           <input name='cardholderemail' id='cardholder-email' class='form-control' placeholder='Jane@tltt.com' />"
-                    + "       </div>"
-                    + "   </div>"
-                    + "   <div class='form-group'>"
-                    + "       <label class='col-md-2 control-label'>Card</label>"
-                    + "       <div class='col-md-10'>"
-                    + "         <div id='card-element' class='form-control'></div>"
-                    + "     </div>"
-                    + "  </div>"
+            var roundedPlanPrice = (planPrice / 100).toFixed(2);
 
-                    + " <div class='form-group'>"
-                    + " <div class='col-md-offset-2 col-md-10'>"
-                    + "    <div class='outcome'>"
-                    + "       <div class='error1' role='alert'></div>"
-                    + "   </div>"
-                    + "  </div>"
-                    + "    </div >"
 
-                    + "  <div class='form-group'>"
-                    + "    <div class='col-md-offset-2 col-md-10'>"
-                    + "       <button id='btnPay' type='submit' class='btn btn-default'>Pay $9.99</button>"
-                    + "    </div>"
-                    + "  </div>"
 
-                    + "   </form >"
-                );
 
-                loadStripe();
 
-            } else {
-                $("#loadPage").html(
-                    "<form id='myForm' class='form-horizontal smaller-width'>"
-                    + " <h4>View and seach all public talents.</h4>"
-                    + " <hr />"
-                    + "  <p>You are currently subscribing to Premium plan at S$9.99/month!</p>"
-                    + "  <br />"
-                    + "  <div class='form-group'>"
-                    + "    <div class='col-md-offset-2 col-md-10'>"
-                    + "       <button id='btnUnsubscribe' type='submit' onClick='Unsubscribe();' class='btn btn-default'>Unsubscibe</button>"
-                    + "    </div>"
-                    + "  </div>"
-                    + "   </form >"
-                );
+            loadRole();
+
+            function loadRole() {
+
+                loadRoleHandler = jQuery.ajax({
+                    method: 'GET',
+                    url: 'http://server.anythingabout.me/Account/GetUserDetails/',
+                    crossDomain: true,
+                    dataType: 'json',
+                    cache: false,
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader('Authorization', 'bearer ' + id_token)
+                    }
+                })
+                loadRoleHandler.done(function (data, textStatus, jqXHR) {
+
+                    role_name = data.roleName;
+
+                    if (role_name === "Standard") {
+
+                        $("#loadPage").html(
+                            "<form id='myForm' class='form-horizontal smaller-width'>"
+                            + " <h4>View and seach all public talents.</h4>"
+                            + " <hr />"
+                            + "  <p>Upgrade to " + planName + " Account to enjoy searching and viewing talents at only " + planCurrency.toUpperCase() + " $" + roundedPlanPrice + "/" + planInterval + "</p>"
+                            + " <p>Total Amount: " + planCurrency.toUpperCase() + " $" + roundedPlanPrice + "</p>"
+                            + "  <br />"
+                            + "  <div class='form-group'>"
+                            + "      <label class='col-md-2 control-label'>Name</label>"
+                            + "      <div class='col-md-10'>"
+                            + "         <input name='cardholdername' id='cardholder-name' class='form-control' placeholder='Jane Doe' />"
+                            + "      </div>"
+                            + "   </div>"
+                            + "   <div class='form-group'>"
+                            + "       <label class='col-md-2 control-label'>Email</label>"
+                            + "       <div class='col-md-10'>"
+                            + "           <input name='cardholderemail' id='cardholder-email' class='form-control' placeholder='Jane@tltt.com' />"
+                            + "       </div>"
+                            + "   </div>"
+                            + "   <div class='form-group'>"
+                            + "       <label class='col-md-2 control-label'>Card</label>"
+                            + "       <div class='col-md-10'>"
+                            + "         <div id='card-element' class='form-control'></div>"
+                            + "     </div>"
+                            + "  </div>"
+
+                            + " <div class='form-group'>"
+                            + " <div class='col-md-offset-2 col-md-10'>"
+                            + "    <div class='outcome'>"
+                            + "       <div class='error1' role='alert'></div>"
+                            + "   </div>"
+                            + "  </div>"
+                            + "    </div >"
+
+                            + "  <div class='form-group'>"
+                            + "    <div class='col-md-offset-2 col-md-10'>"
+                            + "       <button id='btnPay' type='submit' class='btn btn-default'>Pay " + " $" + roundedPlanPrice + "</button>"
+                            + "    </div>"
+                            + "  </div>"
+
+                            + "   </form >"
+                        );
+
+                        loadStripe();
+
+                    } else {
+                        $("#loadPage").html(
+                            "<form id='myForm' class='form-horizontal smaller-width'>"
+                            + " <h4>View and seach all public talents.</h4>"
+                            + " <hr />"
+                            + "  <p>You are currently subscribing to Premium plan at S$9.99/month!</p>"
+                            + "  <br />"
+                            + "  <div class='form-group'>"
+                            + "    <div class='col-md-offset-2 col-md-10'>"
+                            + "       <button id='btnUnsubscribe' type='submit' onClick='Unsubscribe();' class='btn btn-default'>Unsubscibe</button>"
+                            + "    </div>"
+                            + "  </div>"
+                            + "   </form >"
+                        );
+                    }
+
+                })
+                loadRoleHandler.fail(function (data, textStatus, jqXHR) {
+                    toastr.options = {
+                        "closeButton": false,
+                        "debug": false,
+                        "newestOnTop": false,
+                        "progressBar": false,
+                        "positionClass": "toast-bottom-left",
+                        "preventDuplicates": false,
+                        "onclick": null,
+                        "showDuration": "300",
+                        "hideDuration": "1000",
+                        "timeOut": "5000",
+                        "extendedTimeOut": "1000",
+                        "showEasing": "swing",
+                        "hideEasing": "linear",
+                        "showMethod": "fadeIn",
+                        "hideMethod": "fadeOut"
+                    }
+                    toastr["error"]("There was an issue retrieving data from the server.", "Error")
+                })
             }
 
+
         })
-        loadRoleHandler.fail(function (data, textStatus, jqXHR) {
+        loadPlanDataHandler.fail(function (data, textStatus, jqXHR) {
             toastr.options = {
                 "closeButton": false,
                 "debug": false,
@@ -161,6 +214,8 @@
             toastr["error"]("There was an issue retrieving data from the server.", "Error")
         })
     }
+
+
 
 
     function Unsubscribe() {

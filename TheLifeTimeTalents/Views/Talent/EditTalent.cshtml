@@ -216,178 +216,151 @@
 
                         event.preventDefault();
 
-                        AWS.config.update({
-                            region: "us-west-2",
-                            endpoint: 'dynamodb.us-west-2.amazonaws.com',
-                            accessKeyId: "AKIAI6R6STURXVOILDOA",
-                            secretAccessKey: "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"
-                        });
-                        var docClient = new AWS.DynamoDB.DocumentClient();
-                        var params = {
-                            TableName: "CSCSessions",
-                            Key: {
-                                "SessionId": idToken
+                        file = $('#file').get(0).files.item(0);
+
+                        if (file != null) {
+
+                            function WebFormData(inTalentName, inShortName, inReknown, inBio, inIsPrivate, inFileName, inFileString) {
+                                this.TalentName = inTalentName;
+                                this.ShortName = inShortName;
+                                this.Reknown = inReknown;
+                                this.Bio = inBio;
+                                this.IsPrivate = inIsPrivate;
+                                this.FileName = inFileName;
+                                this.InputString = inFileString;
                             }
-                        };
-                        docClient.get(params, function (err, data) {
-                            if (err) {
-                                console.log("Error occurred while retrieving Dynamo data.");
-                            } else {
-                                var retrievedSessionId = data.Item.SessionId;
 
-                                if (idToken === retrievedSessionId) {
+                            collectedTxtTalentName = $('#txtTalentName').val();
+                            collectedTxtShortName = $('#txtShortName').val();
+                            collectedTxtReknown = $('#txtReknown').val();
+                            collectedTxtBio = $('#txtBio').val();
 
-                                    file = $('#file').get(0).files.item(0);
+                            var collectedfileName = file.name;
 
-                                    if (file != null) {
-
-                                        function WebFormData(inTalentName, inShortName, inReknown, inBio, inIsPrivate, inFileName, inFileString) {
-                                            this.TalentName = inTalentName;
-                                            this.ShortName = inShortName;
-                                            this.Reknown = inReknown;
-                                            this.Bio = inBio;
-                                            this.IsPrivate = inIsPrivate;
-                                            this.FileName = inFileName;
-                                            this.InputString = inFileString;
-                                        }
-
-                                        collectedTxtTalentName = $('#txtTalentName').val();
-                                        collectedTxtShortName = $('#txtShortName').val();
-                                        collectedTxtReknown = $('#txtReknown').val();
-                                        collectedTxtBio = $('#txtBio').val();
-
-                                        var collectedfileName = file.name;
-
-                                        if ($("#privacy").is(':checked')) {
-                                            isPrivate = true;
-                                        }
-                                        else {
-                                            isPrivate = false;
-                                        }
-
-                                        var reader = new FileReader();
-                                        reader.readAsDataURL(file);
-                                        reader.onload = function () {
-                                            collectedFileString = reader.result.split(',')[1];
-
-                                            var webFormData = new WebFormData(collectedTxtTalentName,
-                                                collectedTxtShortName, collectedTxtReknown, collectedTxtBio, isPrivate, collectedfileName, collectedFileString);
-                                            var webFormDataInString = JSON.stringify(webFormData);
-
-                                            //console.log(webFormDataInString);
-
-                                            $talentHandler = jQuery.ajax({
-                                                type: 'PUT',
-                                                url: 'http://server.anythingabout.me/API/Talents/UpdateTalent',
-                                                crossDomain: true,
-                                                data: webFormDataInString,
-                                                dataType: 'json',
-                                                contentType: 'application/json',
-                                                beforeSend: function (xhr) {
-                                                    xhr.setRequestHeader('Authorization', 'bearer ' + idToken)
-                                                }
-                                            });
-
-                                            $talentHandler.done(function (data, textStatus, jqXHR) {
-
-                                                swal({
-                                                    title: "Successful!",
-                                                    text: "Talent Updated!",
-                                                    type: "success",
-                                                    confirmButtonColor: "#F05F40",
-                                                },
-                                                    function () {
-                                                        ignore = true;
-                                                        window.location.replace("/Talent/EditTalent");
-                                                    });
-
-                                            });
-
-                                            $talentHandler.fail(function (data, textStatus, jqXHR) {
-                                                swal({
-                                                    title: "Error!",
-                                                    text: "Update Talent fail!",
-                                                    type: "error",
-                                                    confirmButtonColor: "#F05F40",
-                                                });
-                                            });
-
-                                        };
-                                        reader.onerror = function (error) {
-                                            console.log('Error: ', error);
-                                        };
-                                    }
-
-                                    else {
-
-                                        function WebFormData1(inTalentName, inShortName, inReknown, inBio, inIsPrivate) {
-                                            this.TalentName = inTalentName;
-                                            this.ShortName = inShortName;
-                                            this.Reknown = inReknown;
-                                            this.Bio = inBio;
-                                            this.IsPrivate = inIsPrivate;
-                                        }
-
-                                        collectedTxtTalentName = $('#txtTalentName').val();
-                                        collectedTxtShortName = $('#txtShortName').val();
-                                        collectedTxtReknown = $('#txtReknown').val();
-                                        collectedTxtBio = $('#txtBio').val();
-
-                                        if ($("#privacy").is(':checked')) {
-                                            isPrivate = true;
-                                        }
-                                        else {
-                                            isPrivate = false;
-                                        }
-
-                                        var webFormData1 = new WebFormData1(collectedTxtTalentName,
-                                            collectedTxtShortName, collectedTxtReknown, collectedTxtBio, isPrivate);
-                                        var webFormDataInString1 = JSON.stringify(webFormData1);
-
-                                        //console.log(webFormDataInString1);
-
-                                        $talentHandler = jQuery.ajax({
-                                            type: 'PUT',
-                                            url: 'http://server.anythingabout.me/API/Talents/UpdateTalentAttributesOnly',
-                                            crossDomain: true,
-                                            data: webFormDataInString1,
-                                            dataType: 'json',
-                                            contentType: 'application/json',
-                                            beforeSend: function (xhr) {
-                                                xhr.setRequestHeader('Authorization', 'bearer ' + idToken)
-                                            }
-                                        });
-
-                                        $talentHandler.done(function (data, textStatus, jqXHR) {
-
-                                            swal({
-                                                title: "Successful!",
-                                                text: "Talent Updated!",
-                                                type: "success",
-                                                confirmButtonColor: "#F05F40",
-                                            },
-                                                function () {
-                                                    ignore = true;
-                                                    window.location.replace("/Talent/EditTalent");
-                                                });
-
-                                        });
-
-                                        $talentHandler.fail(function (data, textStatus, jqXHR) {
-                                            swal({
-                                                title: "Error!",
-                                                text: "Update Talent fail!",
-                                                type: "error",
-                                                confirmButtonColor: "#F05F40",
-                                            });
-                                        });
-                                    }
-                                }
-                                else {
-                                    console.log("NOT AUTHORIZED");
-                                }
+                            if ($("#privacy").is(':checked')) {
+                                isPrivate = true;
                             }
-                        });
+                            else {
+                                isPrivate = false;
+                            }
+
+                            var reader = new FileReader();
+                            reader.readAsDataURL(file);
+                            reader.onload = function () {
+                                collectedFileString = reader.result.split(',')[1];
+
+                                var webFormData = new WebFormData(collectedTxtTalentName,
+                                    collectedTxtShortName, collectedTxtReknown, collectedTxtBio, isPrivate, collectedfileName, collectedFileString);
+                                var webFormDataInString = JSON.stringify(webFormData);
+
+                                //console.log(webFormDataInString);
+
+                                $talentHandler = jQuery.ajax({
+                                    type: 'PUT',
+                                    url: 'http://server.anythingabout.me/API/Talents/UpdateTalent',
+                                    crossDomain: true,
+                                    data: webFormDataInString,
+                                    dataType: 'json',
+                                    contentType: 'application/json',
+                                    beforeSend: function (xhr) {
+                                        xhr.setRequestHeader('Authorization', 'bearer ' + idToken)
+                                    }
+                                });
+
+                                $talentHandler.done(function (data, textStatus, jqXHR) {
+
+                                    swal({
+                                        title: "Successful!",
+                                        text: "Talent Updated!",
+                                        type: "success",
+                                        confirmButtonColor: "#F05F40",
+                                    },
+                                        function () {
+                                            ignore = true;
+                                            window.location.replace("/Talent/EditTalent");
+                                        });
+
+                                });
+
+                                $talentHandler.fail(function (data, textStatus, jqXHR) {
+                                    swal({
+                                        title: "Error!",
+                                        text: "Update Talent fail!",
+                                        type: "error",
+                                        confirmButtonColor: "#F05F40",
+                                    });
+                                });
+
+                            };
+                            reader.onerror = function (error) {
+                                console.log('Error: ', error);
+                            };
+                        }
+
+                        else {
+
+                            function WebFormData1(inTalentName, inShortName, inReknown, inBio, inIsPrivate) {
+                                this.TalentName = inTalentName;
+                                this.ShortName = inShortName;
+                                this.Reknown = inReknown;
+                                this.Bio = inBio;
+                                this.IsPrivate = inIsPrivate;
+                            }
+
+                            collectedTxtTalentName = $('#txtTalentName').val();
+                            collectedTxtShortName = $('#txtShortName').val();
+                            collectedTxtReknown = $('#txtReknown').val();
+                            collectedTxtBio = $('#txtBio').val();
+
+                            if ($("#privacy").is(':checked')) {
+                                isPrivate = true;
+                            }
+                            else {
+                                isPrivate = false;
+                            }
+
+                            var webFormData1 = new WebFormData1(collectedTxtTalentName,
+                                collectedTxtShortName, collectedTxtReknown, collectedTxtBio, isPrivate);
+                            var webFormDataInString1 = JSON.stringify(webFormData1);
+
+                            //console.log(webFormDataInString1);
+
+                            $talentHandler = jQuery.ajax({
+                                type: 'PUT',
+                                url: 'http://server.anythingabout.me/API/Talents/UpdateTalentAttributesOnly',
+                                crossDomain: true,
+                                data: webFormDataInString1,
+                                dataType: 'json',
+                                contentType: 'application/json',
+                                beforeSend: function (xhr) {
+                                    xhr.setRequestHeader('Authorization', 'bearer ' + idToken)
+                                }
+                            });
+
+                            $talentHandler.done(function (data, textStatus, jqXHR) {
+
+                                swal({
+                                    title: "Successful!",
+                                    text: "Talent Updated!",
+                                    type: "success",
+                                    confirmButtonColor: "#F05F40",
+                                },
+                                    function () {
+                                        ignore = true;
+                                        window.location.replace("/Talent/EditTalent");
+                                    });
+
+                            });
+
+                            $talentHandler.fail(function (data, textStatus, jqXHR) {
+                                swal({
+                                    title: "Error!",
+                                    text: "Update Talent fail!",
+                                    type: "error",
+                                    confirmButtonColor: "#F05F40",
+                                });
+                            });
+                        }
                     });
             }
         });

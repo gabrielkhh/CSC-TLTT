@@ -71,13 +71,13 @@
 
             console.log(data);
 
-            //var planId = data.planId;
-            //var planName = data.planName;
-            //var planPrice = data.planId;
+            var planId = data.planId;
+            var planName = data.planName;
+            var planPrice = data.planId;
 
-            //$('#txtPlanId').val(planId);
-            //$('#txtReknown').val(planName);
-            //$('#txtReknown').val(reknown);
+            $('#txtPlanId').val(planId);
+            $('#txtPlanName').text(planName);
+            $('#txtPlanPrice').text(planPrice);
 
         })
         loadPlanDataHandler.fail(function (data, textStatus, jqXHR) {
@@ -108,63 +108,75 @@
 
             event.preventDefault();
 
-            function WebFormData(inPlanId) {
-                this.planId = inPlanId;
-            }
+            swal({
+                title: "Update Subscription Plan?",
+                showCancelButton: true,
+                closeOnConfirm: false,
+                confirmButtonText: "Yes",
+                cancelButtonText: "No",
+                confirmButtonColor: "#F05F40",
+                showLoaderOnConfirm: true,
+            },
+                function () {
 
-            collectedPlanId = $('#txtPlanId').val();
+                    function WebFormData(inPlanId) {
+                        this.planId = inPlanId;
+                    }
 
-            var webFormData = new WebFormData(collectedPlanId);
+                    collectedPlanId = $('#txtPlanId').val();
 
-            var webFormDataInString = JSON.stringify(webFormData);
+                    var webFormData = new WebFormData(collectedPlanId);
 
-            console.log(webFormDataInString);
+                    var webFormDataInString = JSON.stringify(webFormData);
 
-            $saveHandler = jQuery.ajax({
-                type: 'POST',
-                url: 'http://server.anythingabout.me/Account/Register',
-                crossDomain: true,
-                data: webFormDataInString,
-                dataType: 'json',
-                contentType: 'application/json',
-                beforeSend: function (xhr) {
-                    xhr.setRequestHeader('Authorization', 'bearer ' + accessToken)
-                }
-            });
+                    console.log(webFormDataInString);
 
-            $saveHandler.done(function (data, textStatus, jqXHR) {
-                swal({
-                    title: "Successful!",
-                    text: "Subscription Fee Updated!",
-                    type: "success"
-                },
-                    function () {
-                        ignore = true;
-                        window.location.replace("/Admin/ManageSubscription");
+                    $saveHandler = jQuery.ajax({
+                        type: 'PUT',
+                        url: 'http://server.anythingabout.me/API/Subscription/EditPlan',
+                        crossDomain: true,
+                        data: webFormDataInString,
+                        dataType: 'json',
+                        contentType: 'application/json',
+                        beforeSend: function (xhr) {
+                            xhr.setRequestHeader('Authorization', 'bearer ' + accessToken)
+                        }
                     });
-            });
 
-            $saveHandler.fail(function (data, textStatus, jqXHR) {
-                toastr.options = {
-                    "closeButton": false,
-                    "debug": false,
-                    "newestOnTop": false,
-                    "progressBar": false,
-                    "positionClass": "toast-bottom-left",
-                    "preventDuplicates": false,
-                    "onclick": null,
-                    "showDuration": "300",
-                    "hideDuration": "1000",
-                    "timeOut": "5000",
-                    "extendedTimeOut": "1000",
-                    "showEasing": "swing",
-                    "hideEasing": "linear",
-                    "showMethod": "fadeIn",
-                    "hideMethod": "fadeOut"
-                }
+                    $saveHandler.done(function (data, textStatus, jqXHR) {
+                        swal({
+                            title: "Successful!",
+                            text: "Subscription Fee Updated!",
+                            type: "success"
+                        },
+                            function () {
+                                ignore = true;
+                                window.location.replace("/Admin/ManageSubscription");
+                            });
+                    });
 
-                toastr["error"](jqXHR, "Error")
-            });
+                    $saveHandler.fail(function (data, textStatus, jqXHR) {
+                        toastr.options = {
+                            "closeButton": false,
+                            "debug": false,
+                            "newestOnTop": false,
+                            "progressBar": false,
+                            "positionClass": "toast-bottom-left",
+                            "preventDuplicates": false,
+                            "onclick": null,
+                            "showDuration": "300",
+                            "hideDuration": "1000",
+                            "timeOut": "5000",
+                            "extendedTimeOut": "1000",
+                            "showEasing": "swing",
+                            "hideEasing": "linear",
+                            "showMethod": "fadeIn",
+                            "hideMethod": "fadeOut"
+                        }
+
+                        toastr["error"](jqXHR, "Error")
+                    });
+                });
         });
     });
 </script>

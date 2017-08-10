@@ -53,13 +53,13 @@
 <script>
     var accessToken = sessionStorage.getItem('accessToken');
 
-    //loadPlanData();
+    loadPlanData();
 
     function loadPlanData() {
 
         loadPlanDataHandler = jQuery.ajax({
             method: 'GET',
-            url: 'http://server.anythingabout.me/Account/Register',
+            url: 'http://server.anythingabout.me/API/Subscription/GetPlanInformation',
             crossDomain: true,
             dataType: 'json',
             cache: false,
@@ -70,6 +70,14 @@
         loadPlanDataHandler.done(function (data, textStatus, jqXHR) {
 
             console.log(data);
+
+            //var planId = data.planId;
+            //var planName = data.planName;
+            //var planPrice = data.planId;
+
+            //$('#txtPlanId').val(planId);
+            //$('#txtReknown').val(planName);
+            //$('#txtReknown').val(reknown);
 
         })
         loadPlanDataHandler.fail(function (data, textStatus, jqXHR) {

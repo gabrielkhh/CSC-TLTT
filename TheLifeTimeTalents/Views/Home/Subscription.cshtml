@@ -128,8 +128,13 @@
                     "<form id='myForm' class='form-horizontal smaller-width'>"
                     + " <h4>View and seach all public talents.</h4>"
                     + " <hr />"
-                    + "  <p>You are currently subscribing to this service at S$9.99/month!</p>"
+                    + "  <p>You are currently subscribing Premium plan at S$9.99/month!</p>"
                     + "  <br />"
+                    + "  <div class='form-group'>"
+                    + "    <div class='col-md-offset-2 col-md-10'>"
+                    + "       <button id='btnUnsubscribe' type='submit' onClick='Unsubscribe();' class='btn btn-default'>Unsubscibe</button>"
+                    + "    </div>"
+                    + "  </div>"
                     + "   </form >"
                 );
             }
@@ -157,7 +162,60 @@
         })
     }
 
-    function loadStripe(){
+
+    function Unsubscribe() {
+
+        event.preventDefault();
+
+        swal({
+            title: "Are you sure you want to unsubscribe?",
+            showCancelButton: true,
+            closeOnConfirm: false,
+            confirmButtonText: "Yes",
+            cancelButtonText: "No",
+            confirmButtonColor: "#F05F40",
+            showLoaderOnConfirm: true,
+        },
+            function () {
+                unsubscribeHandler = jQuery.ajax({
+                    method: 'GET',
+                    url: 'http://server.anythingabout.me/API/Subscription/Unsubscribe',
+                    crossDomain: true,
+                    dataType: 'json',
+                    cache: false,
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader('Authorization', 'bearer ' + id_token)
+                    }
+                })
+                unsubscribeHandler.done(function (data, textStatus, jqXHR) {
+
+                    window.location.replace("/Home/Subscription");
+
+                })
+                unsubscribeHandler.fail(function (data, textStatus, jqXHR) {
+                    toastr.options = {
+                        "closeButton": false,
+                        "debug": false,
+                        "newestOnTop": false,
+                        "progressBar": false,
+                        "positionClass": "toast-bottom-left",
+                        "preventDuplicates": false,
+                        "onclick": null,
+                        "showDuration": "300",
+                        "hideDuration": "1000",
+                        "timeOut": "5000",
+                        "extendedTimeOut": "1000",
+                        "showEasing": "swing",
+                        "hideEasing": "linear",
+                        "showMethod": "fadeIn",
+                        "hideMethod": "fadeOut"
+                    }
+                    toastr["error"]("There was an issue retrieving data from the server.", "Error")
+                })
+            });
+    }
+
+    function loadStripe() {
 
         var stripe = Stripe('pk_test_2uTO5iGEzuZns66zBpAO3gks');
         var elements = stripe.elements();

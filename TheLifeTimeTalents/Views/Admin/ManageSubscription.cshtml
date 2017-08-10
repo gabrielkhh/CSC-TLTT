@@ -12,7 +12,7 @@
     <form id="myForm" data-toggle="validator">
         <div class="row">
             <div class="form-group">
-                <label class="col-md-1 control-label">ID</label>
+                <label class="col-md-2 control-label">Plan Id</label>
                 <div class="col-md-2">
                     <input type="text" id="txtPlanId" name="txtPlanId" class="form-control" />
                 </div>
@@ -23,7 +23,7 @@
 
         <div class="row">
             <div class="form-group">
-                <label class="col-md-1 control-label">Name</label>
+                <label class="col-md-2 control-label">Plan Name</label>
                 <div class="col-md-10">
                     <text id="txtPlanName"></text>
                 </div>
@@ -34,7 +34,7 @@
 
         <div class="row">
             <div class="form-group">
-                <label class="col-md-1 control-label">Price</label>
+                <label class="col-md-2 control-label">Plan Price</label>
                 <div class="col-md-10">
                     <text id="txtPlanPrice"></text>
                 </div>
@@ -51,7 +51,9 @@
 </div>
 
 <script>
-    var accessToken = sessionStorage.getItem('accessToken');
+    var idToken = sessionStorage.getItem('idToken');
+
+    var localPlanId = "";
 
     loadPlanData();
 
@@ -64,20 +66,27 @@
             dataType: 'json',
             cache: false,
             beforeSend: function (xhr) {
-                xhr.setRequestHeader('Authorization', 'bearer ' + accessToken)
+                xhr.setRequestHeader('Authorization', 'bearer ' + idToken)
             }
         })
         loadPlanDataHandler.done(function (data, textStatus, jqXHR) {
 
             console.log(data);
 
-            var planId = data.planId;
+            var planId = data.planStripeId;
             var planName = data.planName;
-            var planPrice = data.planId;
+            var planPrice = data.planAmount;
+            var planCurrency = data.planCurrency;
+            var planInterval = data.planInterval;
+            localPlanId = data.localPlanId;
+
+            var roundedPlanPrice = (planPrice / 100).toFixed(2);
+
+            
 
             $('#txtPlanId').val(planId);
             $('#txtPlanName').text(planName);
-            $('#txtPlanPrice').text(planPrice);
+            $('#txtPlanPrice').text(planCurrency.toUpperCase() + " $" + roundedPlanPrice + "/" + planInterval);
 
         })
         loadPlanDataHandler.fail(function (data, textStatus, jqXHR) {
@@ -119,13 +128,14 @@
             },
                 function () {
 
-                    function WebFormData(inPlanId) {
+                    function WebFormData(inPlanId, inLocalPlanId) {
                         this.planId = inPlanId;
+                        this.localPlanId = inLocalPlanId;
                     }
 
                     collectedPlanId = $('#txtPlanId').val();
 
-                    var webFormData = new WebFormData(collectedPlanId);
+                    var webFormData = new WebFormData(collectedPlanId, localPlanId);
 
                     var webFormDataInString = JSON.stringify(webFormData);
 
@@ -139,7 +149,7 @@
                         dataType: 'json',
                         contentType: 'application/json',
                         beforeSend: function (xhr) {
-                            xhr.setRequestHeader('Authorization', 'bearer ' + accessToken)
+                            xhr.setRequestHeader('Authorization', 'bearer ' + idToken)
                         }
                     });
 
@@ -147,7 +157,8 @@
                         swal({
                             title: "Successful!",
                             text: "Subscription Fee Updated!",
-                            type: "success"
+                            type: "success",
+                            confirmButtonColor: "#F05F40",
                         },
                             function () {
                                 ignore = true;
@@ -156,25 +167,12 @@
                     });
 
                     $saveHandler.fail(function (data, textStatus, jqXHR) {
-                        toastr.options = {
-                            "closeButton": false,
-                            "debug": false,
-                            "newestOnTop": false,
-                            "progressBar": false,
-                            "positionClass": "toast-bottom-left",
-                            "preventDuplicates": false,
-                            "onclick": null,
-                            "showDuration": "300",
-                            "hideDuration": "1000",
-                            "timeOut": "5000",
-                            "extendedTimeOut": "1000",
-                            "showEasing": "swing",
-                            "hideEasing": "linear",
-                            "showMethod": "fadeIn",
-                            "hideMethod": "fadeOut"
-                        }
-
-                        toastr["error"](jqXHR, "Error")
+                        swal({
+                            title: "Error!",
+                            text: "Update Subscription Plan fail!",
+                            type: "error",
+                            confirmButtonColor: "#F05F40",
+                        });
                     });
                 });
         });

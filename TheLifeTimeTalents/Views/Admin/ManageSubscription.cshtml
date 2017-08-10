@@ -4,35 +4,84 @@
 
 <div class="container body-content">
     <h2>@ViewData["Title"].</h2>
-    <div class="row">
-        <div class="col-md-6 pull-left">
-            <form id="myForm" class="form-horizontal smaller-width">
-                <h4>Manage Subscription.</h4>
-                <hr />
-                <div class="form-group">
-                    <label class=" pull-left control-label padding-left">Subscription Fee</label>
+
+
+    <div class="col-md-6 pull-left">
+        <form id="myForm" class="form-horizontal smaller-width">
+            <div class="row">
+                <h4>Manage Subscription plans.</h4>
+            </div>
+            <hr />
+
+            <div class="form-group">
+                <label class="control-label orange-text">Plan 1</label>
+                <div class="row">
+                    <br />
+                    <label class=" pull-left control-label padding-left ">Name</label>
+                    <div class="col-md-5">
+                        <input type="text" id="txtPlanName1" name="txtPlanName1" class="form-control" />
+                    </div>
+
+                    <label class=" pull-left control-label padding-left">Price</label>
                     <div class="col-md-2">
-                        <input type="text" id="txtSubscriptionFee" name="txtSubscriptionFee" class="form-control" />
+                        <input type="text" id="txtPlanPrice1" name="txtPlanPrice1" class="form-control" />
                     </div>
+
                 </div>
-                <div class="form-group">
-                    <div class="col-md-offset-2 col-md-10">
-                        <button id="btnSave" type="submit" class="btn btn-default">Save</button>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label orange-text">Plan 2</label>
+                <div class="row">
+                    <br />
+                    <label class=" pull-left control-label padding-left">Name</label>
+                    <div class="col-md-5">
+                        <input type="text" id="txtPlanName2" name="txtPlanName2" class="form-control" />
                     </div>
+
+                    <label class=" pull-left control-label padding-left">Price</label>
+                    <div class="col-md-2">
+                        <input type="text" id="txtPlanPrice2" name="txtPlanPrice2" class="form-control" />
+                    </div>
+
                 </div>
-            </form>
-        </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label orange-text">Plan 3</label>
+                <div class="row">
+                    <br />
+                    <label class=" pull-left control-label padding-left">Name</label>
+                    <div class="col-md-5">
+                        <input type="text" id="txtPlanName3" name="txtPlanName3" class="form-control" />
+                    </div>
+
+                    <label class=" pull-left control-label padding-left">Price</label>
+                    <div class="col-md-2">
+                        <input type="text" id="txtPlanPrice3" name="txtPlanPrice3" class="form-control" />
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <button id="btnSave" type="submit" class="btn btn-default">Save</button>
+                </div>
+            </div>
+        </form>
     </div>
+
 </div>
 
 <script>
     var accessToken = sessionStorage.getItem('accessToken');
 
-    //loadSubscriptionFeeData();
+    //loadPlanData();
 
-    function loadSubscriptionFeeData() {
+    function loadPlanData() {
 
-        loadSubscriptionFeeData = jQuery.ajax({
+        loadPlanDataHandler = jQuery.ajax({
             method: 'GET',
             url: 'http://server.anythingabout.me/Account/Register',
             crossDomain: true,
@@ -42,12 +91,12 @@
                 xhr.setRequestHeader('Authorization', 'bearer ' + accessToken)
             }
         })
-        loadSubscriptionFeeDataHandler.done(function (data, textStatus, jqXHR) {
+        loadPlanDataHandler.done(function (data, textStatus, jqXHR) {
 
             console.log(data);
 
         })
-        loadSubscriptionFeeDataHandler.fail(function (data, textStatus, jqXHR) {
+        loadPlanDataHandler.fail(function (data, textStatus, jqXHR) {
             toastr.options = {
                 "closeButton": false,
                 "debug": false,
@@ -75,13 +124,13 @@
 
             event.preventDefault();
 
-            function WebFormData(inSubscriptionFee) {
-                this.SubscriptionFee = inSubscriptionFee;
+            function WebFormData(inPlanName1) {
+                this.planName1 = inPlanName1;
             }
 
-            collectedSubscriptionFee = $('#txtSubscriptionFee').val();
+            collectedPlanName1 = $('#txtPlanName1').val();
 
-            var webFormData = new WebFormData(collectedSubscriptionFee);
+            var webFormData = new WebFormData(collectedPlanName1);
 
             var webFormDataInString = JSON.stringify(webFormData);
 

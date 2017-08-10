@@ -12,8 +12,9 @@
 
 
     <div class="container-fluid">
-        <div class="row no-gutter popup-gallery" id="load_Image">
-        </div>
+        @*<div class="row no-gutter popup-gallery" id="load_Image">*@
+            <div class="row no-gutter" id="load_Image">
+            </div>
     </div>
 </div>
 
@@ -26,8 +27,9 @@
     var bio = "";
     var isPrivate = "";
     var imageUrl = "";
-    var html_imgs = '';
-    var username = '';
+    var html_imgs = "";
+    var username = "";
+    var userId = "";
 
     loadTalentData();
 
@@ -38,7 +40,6 @@
         loadTalentDataHandler = jQuery.ajax({
             method: 'GET',
             url: 'http://server.anythingabout.me/API/Talents/GetPublicTalents',
-            //url: 'http://server.anythingabout.me/API/Talents/GetAllTalents',
             crossDomain: true,
             dataType: 'json',
             cache: false,
@@ -60,10 +61,11 @@
                 isPrivate = talent.isPrivate;
                 imageUrl = talent.imageUrl;
                 username = talent.userName;
+                userId = talent.userId;
 
                 if (imageUrl != null) {
                     html_imgs = "<div class='col-lg-4 col-sm-6 forSearch'>"
-                        + "<a href='" + imageUrl + "'class='portfolio-box'>"
+                        + "<a href='/Talent/ViewOneTalent/" + userId + "' class='portfolio-box'>"
                         + "<img src='" + imageUrl + "' class='img-responsive' alt=''/>"
                         + "<div class='portfolio-box-caption'>"
                         + "<div class='portfolio-box-caption-content'>"

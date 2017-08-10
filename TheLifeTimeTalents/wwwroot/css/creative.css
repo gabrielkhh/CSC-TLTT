@@ -13,6 +13,9 @@
     background-repeat: no-repeat;
 }
 
+.orange-text {
+    color: #F05F40;
+}
 .thumbnail-small {
     width: 150px;
     height: 100px;
@@ -47,7 +50,7 @@
 }
 
 .padding-left {
-    padding-left: 20px;
+    padding-left: 15px;
 }
 
 .body-content {

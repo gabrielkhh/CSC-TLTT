@@ -19,10 +19,12 @@
     })
     getEmailConfirmationHandler.done(function (data, textStatus, jqXHR) {
 
+        var displayName1 = data.displayName;
+
         $('.backgroundImage2').html(
             "  <div class='header-content'>"
             + "     <div class='header-content-inner'>"
-            + "         <h1 id='homeHeading'>Thank you for registering with us!</h1>"
+            + "         <h1 id='homeHeading'>Thank you " + displayName1 + "for registering with us!</h1>"
             + "         <hr>"
             + "             <p>Your Email has been confirmed!</p>"
             + "             <a href='/Home/Index' class='btn btn-default btn-xl page-scroll'>Explore</a>"

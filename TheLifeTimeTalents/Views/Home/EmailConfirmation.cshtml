@@ -1,19 +1,47 @@
-﻿
-@{
-    ViewData["Title"] = "Subscription";
-}
-
-<header class="backgroundImage2">
-    <div class="header-content">
-        <div class="header-content-inner">
-            <h1 id="homeHeading">Your Email has been confirmed!</h1>
-            <hr>
-            <p>Upload your Talent now!</p>
-            <a href="/Home/Index" class="btn btn-default btn-xl page-scroll">Explore</a>
-        </div>
-    </div>
-</header>
+﻿<header class='backgroundImage2'></header>
 
 <script>
+
+    var g_userId = getIdFromAddressBar();
+
+    function getIdFromAddressBar() {
+        var urlArray = window.location.href.split('/');
+        var userId = urlArray[urlArray.length - 1];
+        return userId;
+    }
+
+    getEmailConfirmationHandler = jQuery.ajax({
+        method: 'GET',
+        url: 'http://server.anythingabout.me/Account/ConfirmEmailScreen/' + g_userId,
+        crossDomain: true,
+        dataType: 'json',
+        cache: false
+    })
+    getEmailConfirmationHandler.done(function (data, textStatus, jqXHR) {
+
+        $('.backgroundImage2').html(
+            "  <div class='header-content'>"
+            + "     <div class='header-content-inner'>"
+            + "         <h1 id='homeHeading'>Thank you for registering with us!</h1>"
+            + "         <hr>"
+            + "             <p>Your Email has been confirmed!</p>"
+            + "             <a href='/Home/Index' class='btn btn-default btn-xl page-scroll'>Explore</a>"
+            + "  </div>"
+            + "        </div>"
+        );
+
+    })
+    getEmailConfirmationHandler.fail(function (data, textStatus, jqXHR) {
+        $('.backgroundImage2').html(
+            "  <div class='header-content'>"
+            + "     <div class='header-content-inner'>"
+            + "         <h1 id='homeHeading'>Fail!</h1>"
+            + "         <hr>"
+            + "             <p>" + data.responseJSON.message + "</p>"
+            + "             <a href='/Home/Index' class='btn btn-default btn-xl page-scroll'>Explore</a>"
+            + "  </div>"
+            + "        </div>"
+        );
+    })
 
 </script>

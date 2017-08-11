@@ -212,7 +212,7 @@
                     "hideMethod": "fadeOut"
                 }
 
-                if (data.responseJSON.message === "Session Expired. Please login again."){
+                if (data.responseJSON.message === "Session Expired. Please login again.") {
                     toastr["error"](data.responseJSON.message, "Error")
                 }
 
@@ -231,6 +231,29 @@
             + "</ul>"
             + "</form>")
     }
+
+    toastr.options = {
+        "closeButton": true,
+        "debug": false,
+        "newestOnTop": false,
+        "progressBar": false,
+        "positionClass": "toast-bottom-left",
+        "preventDuplicates": false,
+        "tapToDismiss": false,
+        "onclick": false,
+        "closeOnHover": false,
+        "showDuration": false,
+        "hideDuration": false,
+        "timeOut": false,
+        "extendedTimeOut": false,
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    }
+
+    toastr["info"]("Please check your email to activate your account!")
+
 
     function getLogout() {
 

@@ -27,5 +27,10 @@ namespace TheLifeTimeTalents.Controllers
         {
             return View();
         }
+
+        public IActionResult EmailConfirmation()
+        {
+            return View();
+        }
     }
 }

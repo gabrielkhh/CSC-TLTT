@@ -229,110 +229,82 @@
             },
                 function () {
 
-                    AWS.config.update({
-                        region: "us-west-2",
-                        endpoint: 'dynamodb.us-west-2.amazonaws.com',
-                        accessKeyId: "AKIAI6R6STURXVOILDOA",
-                        secretAccessKey: "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"
-                    });
-                    var docClient = new AWS.DynamoDB.DocumentClient();
-                    var params = {
-                        TableName: "CSCSessions",
-                        Key: {
-                            "SessionId": idToken
+                    function WebFormData(inisBan, inRole) {
+                        this.IsBanned = isBan;
+                        this.RoleName = inRole;
+                    }
+
+                    var role = '';
+
+                    var roleValue = $('#roleValue').val();
+
+                    if (roleValue === "1") {
+                        role = "Standard"
+                    }
+                    else if (roleValue === "2") {
+                        role = "Premium"
+                    }
+                    if (roleValue === "3") {
+                        role = "Administrator"
+                    }
+
+                    if ($("#ban").is(':checked')) {
+                        isBan = true;
+                    }
+                    else {
+                        isBan = false;
+                    }
+
+                    var webFormData = new WebFormData(isBan, role);
+                    var webFormDataInString = JSON.stringify(webFormData);
+
+                    console.log(webFormDataInString);
+
+                    $talentHandler = jQuery.ajax({
+                        type: 'PUT',
+                        url: 'http://server.anythingabout.me/API/Talents/UpdateForAdmin/' + g_userId,
+                        crossDomain: true,
+                        data: webFormDataInString,
+                        dataType: 'json',
+                        contentType: 'application/json',
+                        beforeSend: function (xhr) {
+                            xhr.setRequestHeader('Authorization', 'bearer ' + idToken)
                         }
-                    };
-                    docClient.get(params, function (err, data) {
-                        if (err) {
-                            console.log("Error occurred while retrieving Dynamo data.");
-                        } else {
-                            var retrievedSessionId = data.Item.SessionId;
+                    });
 
-                            if (idToken === retrievedSessionId) {
+                    $talentHandler.done(function (data, textStatus, jqXHR) {
 
-                                function WebFormData(inisBan, inRole) {
-                                    this.IsBanned = isBan;
-                                    this.RoleName = inRole;
-                                }
+                        swal({
+                            title: "Successful!",
+                            text: "Talent Updated!",
+                            type: "success",
+                            confirmButtonColor: "#F05F40",
+                        },
+                            function () {
+                                ignore = true;
+                                window.location.replace("/Admin/EditTalent/" + g_userId);
+                            });
 
-                                var role = '';
+                    });
 
-                                var roleValue = $('#roleValue').val();
+                    $talentHandler.fail(function (data, textStatus, jqXHR) {
 
-                                if (roleValue === "1") {
-                                    role = "Standard"
-                                }
-                                else if (roleValue === "2") {
-                                    role = "Premium"
-                                }
-                                if (roleValue === "3") {
-                                    role = "Administrator"
-                                }
+                        if (data.responseJSON.message === "Session Expired. Please login again.") {
+                            swal({
+                                title: "Error!",
+                                text: data.responseJSON.message,
+                                type: "error",
+                                confirmButtonColor: "#F05F40",
+                            });
+                        }
 
-                                if ($("#ban").is(':checked')) {
-                                    isBan = true;
-                                }
-                                else {
-                                    isBan = false;
-                                }
-
-                                var webFormData = new WebFormData(isBan, role);
-                                var webFormDataInString = JSON.stringify(webFormData);
-
-                                console.log(webFormDataInString);
-
-                                $talentHandler = jQuery.ajax({
-                                    type: 'PUT',
-                                    url: 'http://server.anythingabout.me/API/Talents/UpdateForAdmin/' + g_userId,
-                                    crossDomain: true,
-                                    data: webFormDataInString,
-                                    dataType: 'json',
-                                    contentType: 'application/json',
-                                    beforeSend: function (xhr) {
-                                        xhr.setRequestHeader('Authorization', 'bearer ' + idToken)
-                                    }
-                                });
-
-                                $talentHandler.done(function (data, textStatus, jqXHR) {
-
-                                    swal({
-                                        title: "Successful!",
-                                        text: "Talent Updated!",
-                                        type: "success",
-                                        confirmButtonColor: "#F05F40",
-                                    },
-                                        function () {
-                                            ignore = true;
-                                            window.location.replace("/Admin/EditTalent/" + g_userId);
-                                        });
-
-                                });
-
-                                $talentHandler.fail(function (data, textStatus, jqXHR) {
-
-                                    if (data.responseJSON.message === "Session Expired. Please login again.") {
-                                        swal({
-                                            title: "Error!",
-                                            text: data.responseJSON.message,
-                                            type: "error",
-                                            confirmButtonColor: "#F05F40",
-                                        });
-                                    }
-
-                                    else {
-                                        swal({
-                                            title: "Error!",
-                                            text: "Update Talent fail!",
-                                            type: "error",
-                                            confirmButtonColor: "#F05F40",
-                                        });
-                                    }
-                                });
-
-                            }
-                            else {
-                                console.log("NOT AUTHORIZED");
-                            }
+                        else {
+                            swal({
+                                title: "Error!",
+                                text: "Update Talent fail!",
+                                type: "error",
+                                confirmButtonColor: "#F05F40",
+                            });
                         }
                     });
                 });

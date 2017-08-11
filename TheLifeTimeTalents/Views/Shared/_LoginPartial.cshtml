@@ -193,7 +193,7 @@
                 }
 
             })
-            loadDisplayNameDataHandler.fail(function (data, textStatus, jqXHR) {
+            loadDisplayNameDataHandler.fail(function (data, textStatus, XHR) {
                 toastr.options = {
                     "closeButton": false,
                     "debug": false,
@@ -211,7 +211,15 @@
                     "showMethod": "fadeIn",
                     "hideMethod": "fadeOut"
                 }
-                toastr["error"]("There was an issue retrieving data from the server.", "Error")
+
+                if (data.responseJSON.message === "Session Expired. Please login again."){
+                    toastr["error"](data.responseJSON.message, "Error")
+                }
+
+                else {
+                    toastr["error"]("Error retrieving data", "Error")
+                }
+
             })
         }
     }
@@ -262,7 +270,7 @@
                 "showMethod": "fadeIn",
                 "hideMethod": "fadeOut"
             }
-            toastr["error"]("There was an issue retrieving data from the server.", "Error")
+            toastr["error"]("Logout Fail", "Error")
         })
     }
 

@@ -209,12 +209,25 @@
                                 });
 
                                 $talentHandler.fail(function (data, textStatus, jqXHR) {
-                                    swal({
-                                        title: "Error!",
-                                        text: "Add Talent fail!",
-                                        type: "error",
-                                        confirmButtonColor: "#F05F40",
-                                    });
+
+                                    if (data.responseJSON.message === "Session Expired. Please login again.") {
+                                        swal({
+                                            title: "Error!",
+                                            text: data.responseJSON.message,
+                                            type: "error",
+                                            confirmButtonColor: "#F05F40",
+                                        });
+                                    }
+
+                                    else {
+                                        swal({
+                                            title: "Error!",
+                                            text: "Add Talent fail!",
+                                            type: "error",
+                                            confirmButtonColor: "#F05F40",
+                                        });
+                                    }
+
                                 });
 
                             };

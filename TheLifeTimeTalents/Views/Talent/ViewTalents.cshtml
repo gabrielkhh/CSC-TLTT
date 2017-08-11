@@ -119,7 +119,13 @@
                 "showMethod": "fadeIn",
                 "hideMethod": "fadeOut"
             }
-            toastr["error"]("There was an issue retrieving data from the server.", "Error")
+            if (data.responseJSON.message === "Session Expired. Please login again.") {
+                toastr["error"](data.responseJSON.message, "Error")
+            }
+
+            else {
+                toastr["error"]("Error retrieving data", "Error")
+            }
         })
     }
 </script>

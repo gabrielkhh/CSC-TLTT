@@ -5,6 +5,7 @@
     var displayName = "";
     var roleName = "";
     var hasTalent = "";
+    var isConfirmed = "";
     id_token = sessionStorage.getItem('idToken');
 
     if (id_token != null) {
@@ -30,6 +31,7 @@
                 displayName = data.displayName;
                 roleName = data.roleName;
                 hasTalent = data.hasTalent;
+                isConfirmed = data.isConfirmed;
 
                 if (roleName === "Standard") {
                     if (hasTalent === true) {
@@ -192,6 +194,33 @@
                         + " </form>")
                 }
 
+
+                if (isConfirmed == false) {
+                    toastr.options = {
+                        "closeButton": true,
+                        "debug": false,
+                        "newestOnTop": false,
+                        "progressBar": false,
+                        "positionClass": "toast-bottom-full-width",
+                        "preventDuplicates": false,
+                        "tapToDismiss": false,
+                        "onclick": false,
+                        "closeOnHover": false,
+                        "showDuration": false,
+                        "hideDuration": false,
+                        "timeOut": false,
+                        "extendedTimeOut": false,
+                        "showEasing": "swing",
+                        "hideEasing": "linear",
+                        "showMethod": "fadeIn",
+                        "hideMethod": "fadeOut"
+                    }
+
+                    toastr["warning"]("Please verify your Email now by checking your Email inbox for the confirmation Email! Didn't receive one? Click <a style = 'text-decoration: underline'>here</a> to resend confirmation Email.", "Email not verified")
+
+                }
+
+
             })
             loadDisplayNameDataHandler.fail(function (data, textStatus, XHR) {
                 toastr.options = {
@@ -231,29 +260,6 @@
             + "</ul>"
             + "</form>")
     }
-
-    toastr.options = {
-        "closeButton": true,
-        "debug": false,
-        "newestOnTop": false,
-        "progressBar": false,
-        "positionClass": "toast-bottom-full-width",
-        "preventDuplicates": false,
-        "tapToDismiss": false,
-        "onclick": false,
-        "closeOnHover": false,
-        "showDuration": false,
-        "hideDuration": false,
-        "timeOut": false,
-        "extendedTimeOut": false,
-        "showEasing": "swing",
-        "hideEasing": "linear",
-        "showMethod": "fadeIn",
-        "hideMethod": "fadeOut"
-    }
-
-    toastr["warning"]("Please verify your Email now by checking your Email inbox for the confirmation Email! Didn't receive one? Click <a style = 'text-decoration: underline'>here</a> to resend confirmation Email.", "Email not verified")
-
 
     function getLogout() {
 

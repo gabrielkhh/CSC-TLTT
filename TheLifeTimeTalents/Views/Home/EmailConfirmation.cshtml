@@ -19,14 +19,15 @@
     })
     getEmailConfirmationHandler.done(function (data, textStatus, jqXHR) {
 
-        var displayName1 = data.displayName;
+        var displayName_ = data.displayName;
+        var email = data.email;
 
         $('.backgroundImage2').html(
             "  <div class='header-content'>"
             + "     <div class='header-content-inner'>"
-            + "         <h1 id='homeHeading'>Thank you " + displayName1 + "for registering with us!</h1>"
+            + "         <h1 id='homeHeading'>Thank you " + displayName_ + " for registering with us!</h1>"
             + "         <hr>"
-            + "             <p>Your Email has been confirmed!</p>"
+            + "             <p>Your Email " + email + " has been confirmed!</p>"
             + "             <a href='/Home/Index' class='btn btn-default btn-xl page-scroll'>Explore</a>"
             + "  </div>"
             + "        </div>"
@@ -37,7 +38,7 @@
         $('.backgroundImage2').html(
             "  <div class='header-content'>"
             + "     <div class='header-content-inner'>"
-            + "         <h1 id='homeHeading'>Fail!</h1>"
+            + "         <h1 id='homeHeading'>Email verification failed :( </h1>"
             + "         <hr>"
             + "             <p>" + data.responseJSON.message + "</p>"
             + "             <a href='/Home/Index' class='btn btn-default btn-xl page-scroll'>Explore</a>"

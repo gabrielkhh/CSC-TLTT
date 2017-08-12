@@ -130,113 +130,129 @@
 
             submitHandler: function (form) {
 
-                swal({
-                    title: "Add Talent?",
-                    showCancelButton: true,
-                    closeOnConfirm: false,
-                    confirmButtonText: "Yes",
-                    cancelButtonText: "No",
-                    confirmButtonColor: "#F05F40",
-                    showLoaderOnConfirm: true,
-                },
-                    function () {
-
-                        event.preventDefault();
-
-                        if (idToken != null) {
-
-                            function WebFormData(inTalentName, inShortName, inReknown, inBio, inIsPrivate, inFileName, inFileString) {
-                                this.TalentName = inTalentName;
-                                this.ShortName = inShortName;
-                                this.Reknown = inReknown;
-                                this.Bio = inBio;
-                                this.IsPrivate = inIsPrivate;
-                                this.FileName = inFileName;
-                                this.InputString = inFileString;
-                            }
-
-                            //NO FRONT END VALIDATION YET
-                            collectedTxtTalentName = $('#txtTalentName').val();
-                            collectedTxtShortName = $('#txtShortName').val();
-                            collectedTxtReknown = $('#txtReknown').val();
-                            collectedTxtBio = $('#txtBio').val();
-                            var file = $('#file').get(0).files.item(0);
-                            var collectedfileName = file.name;
-
-                            if ($("#privacy").is(':checked')) {
-                                isPrivate = true;
-                            }
-                            else {
-                                isPrivate = false;
-                            }
-
-                            var reader = new FileReader();
-                            reader.readAsDataURL(file);
-                            reader.onload = function () {
-                                collectedFileString = reader.result.split(',')[1];
-
-                                var webFormData = new WebFormData(collectedTxtTalentName,
-                                    collectedTxtShortName, collectedTxtReknown, collectedTxtBio, isPrivate, collectedfileName, collectedFileString);
-                                var webFormDataInString = JSON.stringify(webFormData);
-
-                                //console.log(webFormDataInString);
-
-                                $talentHandler = jQuery.ajax({
-                                    type: 'PUT',
-                                    url: 'http://server.anythingabout.me/API/Talents/UpdateTalent',
-                                    crossDomain: true,
-                                    data: webFormDataInString,
-                                    dataType: 'json',
-                                    contentType: 'application/json',
-                                    beforeSend: function (xhr) {
-                                        xhr.setRequestHeader('Authorization', 'bearer ' + idToken)
-                                    }
-                                });
-
-                                $talentHandler.done(function (data, textStatus, jqXHR) {
-
-                                    swal({
-                                        title: "Successful!",
-                                        text: "Talent Added!",
-                                        type: "success",
-                                        confirmButtonColor: "#F05F40",
-                                    },
-                                        function () {
-                                            ignore = true;
-                                            window.location.replace("/Home/Index");
-                                        });
-
-                                });
-
-                                $talentHandler.fail(function (data, textStatus, jqXHR) {
-
-                                    if (data.responseJSON.message === "Session Expired. Please login again.") {
-                                        swal({
-                                            title: "Error!",
-                                            text: data.responseJSON.message,
-                                            type: "error",
-                                            confirmButtonColor: "#F05F40",
-                                        });
-                                    }
-
-                                    else {
-                                        swal({
-                                            title: "Error!",
-                                            text: "Add Talent fail!",
-                                            type: "error",
-                                            confirmButtonColor: "#F05F40",
-                                        });
-                                    }
-
-                                });
-
-                            };
-                            reader.onerror = function (error) {
-                                console.log('Error: ', error);
-                            };
-                        }
-
+                if (isConfirmed == false) {
+                    swal({
+                        title: "Error!",
+                        text: "Please verify your email before adding talent!",
+                        type: "error",
+                        confirmButtonColor: "#F05F40",
                     });
+
+                }
+
+                else {
+
+                    swal({
+                        title: "Add Talent?",
+                        showCancelButton: true,
+                        closeOnConfirm: false,
+                        confirmButtonText: "Yes",
+                        cancelButtonText: "No",
+                        confirmButtonColor: "#F05F40",
+                        showLoaderOnConfirm: true,
+                    },
+                        function () {
+
+                            event.preventDefault();
+
+                            if (idToken != null) {
+
+                                function WebFormData(inTalentName, inShortName, inReknown, inBio, inIsPrivate, inFileName, inFileString) {
+                                    this.TalentName = inTalentName;
+                                    this.ShortName = inShortName;
+                                    this.Reknown = inReknown;
+                                    this.Bio = inBio;
+                                    this.IsPrivate = inIsPrivate;
+                                    this.FileName = inFileName;
+                                    this.InputString = inFileString;
+                                }
+
+                                //NO FRONT END VALIDATION YET
+                                collectedTxtTalentName = $('#txtTalentName').val();
+                                collectedTxtShortName = $('#txtShortName').val();
+                                collectedTxtReknown = $('#txtReknown').val();
+                                collectedTxtBio = $('#txtBio').val();
+                                var file = $('#file').get(0).files.item(0);
+                                var collectedfileName = file.name;
+
+                                if ($("#privacy").is(':checked')) {
+                                    isPrivate = true;
+                                }
+                                else {
+                                    isPrivate = false;
+                                }
+
+                                var reader = new FileReader();
+                                reader.readAsDataURL(file);
+                                reader.onload = function () {
+                                    collectedFileString = reader.result.split(',')[1];
+
+                                    var webFormData = new WebFormData(collectedTxtTalentName,
+                                        collectedTxtShortName, collectedTxtReknown, collectedTxtBio, isPrivate, collectedfileName, collectedFileString);
+                                    var webFormDataInString = JSON.stringify(webFormData);
+
+                                    //console.log(webFormDataInString);
+
+                                    $talentHandler = jQuery.ajax({
+                                        type: 'PUT',
+                                        url: 'http://server.anythingabout.me/API/Talents/UpdateTalent',
+                                        crossDomain: true,
+                                        data: webFormDataInString,
+                                        dataType: 'json',
+                                        contentType: 'application/json',
+                                        beforeSend: function (xhr) {
+                                            xhr.setRequestHeader('Authorization', 'bearer ' + idToken)
+                                        }
+                                    });
+
+                                    $talentHandler.done(function (data, textStatus, jqXHR) {
+
+                                        swal({
+                                            title: "Successful!",
+                                            text: "Talent Added!",
+                                            type: "success",
+                                            confirmButtonColor: "#F05F40",
+                                        },
+                                            function () {
+                                                ignore = true;
+                                                window.location.replace("/Home/Index");
+                                            });
+
+                                    });
+
+                                    $talentHandler.fail(function (data, textStatus, jqXHR) {
+
+                                        if (data.responseJSON.message === "Session Expired. Please login again.") {
+                                            swal({
+                                                title: "Error!",
+                                                text: data.responseJSON.message,
+                                                type: "error",
+                                                confirmButtonColor: "#F05F40",
+                                            });
+                                        }
+
+                                        else {
+                                            swal({
+                                                title: "Error!",
+                                                text: "Add Talent fail!",
+                                                type: "error",
+                                                confirmButtonColor: "#F05F40",
+                                            });
+                                        }
+
+                                    });
+
+                                };
+                                reader.onerror = function (error) {
+                                    console.log('Error: ', error);
+                                };
+                            }
+
+                        });
+
+                }
+
+
             }
         });
 

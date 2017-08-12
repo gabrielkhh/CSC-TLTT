@@ -63,7 +63,7 @@
 
         loadPlanDataHandler = jQuery.ajax({
             method: 'GET',
-            url: 'http://server.anythingabout.me/API/Subscription/GetPlanInformation',
+            url: 'https://server.anythingabout.me/API/Subscription/GetPlanInformation',
             crossDomain: true,
             dataType: 'json',
             cache: false,
@@ -150,7 +150,7 @@
 
                     $saveHandler = jQuery.ajax({
                         type: 'PUT',
-                        url: 'http://server.anythingabout.me/API/Subscription/EditPlan',
+                        url: 'https://server.anythingabout.me/API/Subscription/EditPlan',
                         crossDomain: true,
                         data: webFormDataInString,
                         dataType: 'json',

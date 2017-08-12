@@ -1,4 +1,4 @@
-﻿<script src="https://sdk.amazonaws.com/js/aws-sdk-2.0.0-rc1.min.js"></script>
+﻿<script src="httpss://sdk.amazonaws.com/js/aws-sdk-2.0.0-rc1.min.js"></script>
 @{
     ViewData["Title"] = "Manage Talents";
 }
@@ -71,7 +71,7 @@
 
         loadTalentDataHandler = jQuery.ajax({
             method: 'GET',
-            url: 'http://server.anythingabout.me/API/Talents/GetAllTalents',
+            url: 'https://server.anythingabout.me/API/Talents/GetAllTalents',
             crossDomain: true,
             dataType: 'json',
             cache: false,

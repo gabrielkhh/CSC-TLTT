@@ -60,7 +60,7 @@
 
         loadProfileDataHandler = jQuery.ajax({
             method: 'GET',
-            url: 'http://server.anythingabout.me/Account/GetAccountDetails',
+            url: 'https://server.anythingabout.me/Account/GetAccountDetails',
             crossDomain: true,
             dataType: 'json',
             cache: false,
@@ -184,7 +184,7 @@
 
                         $updateHandler = jQuery.ajax({
                             type: 'PUT',
-                            url: 'http://server.anythingabout.me/Account/UpdateUserDetails',
+                            url: 'https://server.anythingabout.me/Account/UpdateUserDetails',
                             crossDomain: true,
                             data: webFormDataInString,
                             dataType: 'json',

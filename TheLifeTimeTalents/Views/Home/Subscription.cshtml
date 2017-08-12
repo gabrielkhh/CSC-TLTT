@@ -1,4 +1,4 @@
-﻿<script src="https://js.stripe.com/v3/"></script>
+﻿<script src="httpss://js.stripe.com/v3/"></script>
 
 @{
     ViewData["Title"] = "Subscription";
@@ -64,7 +64,7 @@
 
         loadPlanDataHandler = jQuery.ajax({
             method: 'GET',
-            url: 'http://server.anythingabout.me/API/Subscription/GetSubscription',
+            url: 'https://server.anythingabout.me/API/Subscription/GetSubscription',
             crossDomain: true,
             dataType: 'json',
             cache: false,
@@ -89,7 +89,7 @@
 
                 loadRoleHandler = jQuery.ajax({
                     method: 'GET',
-                    url: 'http://server.anythingabout.me/Account/GetUserDetails/',
+                    url: 'https://server.anythingabout.me/Account/GetUserDetails/',
                     crossDomain: true,
                     dataType: 'json',
                     cache: false,
@@ -240,7 +240,7 @@
             function () {
                 unsubscribeHandler = jQuery.ajax({
                     method: 'GET',
-                    url: 'http://server.anythingabout.me/API/Subscription/Unsubscribe',
+                    url: 'https://server.anythingabout.me/API/Subscription/Unsubscribe',
                     crossDomain: true,
                     dataType: 'json',
                     cache: false,
@@ -334,7 +334,7 @@
 
                         $paymentHandler = jQuery.ajax({
                             type: 'POST',
-                            url: 'http://server.anythingabout.me/API/Subscription/Pay',
+                            url: 'https://server.anythingabout.me/API/Subscription/Pay',
                             crossDomain: true,
                             data: webFormDataInString,
                             dataType: 'json',

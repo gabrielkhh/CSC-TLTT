@@ -1,4 +1,4 @@
-﻿<script src="https://sdk.amazonaws.com/js/aws-sdk-2.0.0-rc1.min.js"></script>
+﻿<script src="httpss://sdk.amazonaws.com/js/aws-sdk-2.0.0-rc1.min.js"></script>
 @{
     ViewData["Title"] = "Edit Talent";
 }
@@ -92,7 +92,7 @@
         </div>
     </form>
 </div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/aws-sdk/2.94.0/aws-sdk.js"></script>
+<script src="httpss://cdnjs.cloudflare.com/ajax/libs/aws-sdk/2.94.0/aws-sdk.js"></script>
 <script>
 
     var g_userId = getIdFromAddressBar();
@@ -122,7 +122,7 @@
 
         loadTalentDataHandler = jQuery.ajax({
             method: 'GET',
-            url: 'http://server.anythingabout.me/API/Talents/GetForAdmin/' + g_userId,
+            url: 'https://server.anythingabout.me/API/Talents/GetForAdmin/' + g_userId,
             crossDomain: true,
             dataType: 'json',
             cache: false,
@@ -262,7 +262,7 @@
 
                     $talentHandler = jQuery.ajax({
                         type: 'PUT',
-                        url: 'http://server.anythingabout.me/API/Talents/UpdateForAdmin/' + g_userId,
+                        url: 'https://server.anythingabout.me/API/Talents/UpdateForAdmin/' + g_userId,
                         crossDomain: true,
                         data: webFormDataInString,
                         dataType: 'json',
